@@ -1,34 +1,32 @@
-.container {
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 100vh;
-}
+  background-color: #f5f5f5;
 
-.card {
-  border-radius: 10px;
-}
+  mat-card {
+    width: 400px;
+    padding: 30px;
+    border-radius: 15px; /* Bordas arredondadas */
+    border: 1px solid #ccc; /* Borda fina */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Levemente suspensa */
+    
+    h2 {
+      margin-bottom: 20px;
+      margin-left: 95px;
+    }
+  
+  }
 
-.btn-block {
-  display: block;
-  width: 100%;
-}
+  .login-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
 
-.btn-outline-primary {
-  color: #4267b2;
-  border-color: #4267b2;
-}
-
-.btn-outline-primary:hover {
-  color: #fff;
-  background-color: #4267b2;
-  border-color: #4267b2;
-}
-
-.btn-outline-danger {
-  color: #db4437;
-  border-color: #db4437;
-}
-
-.btn-outline-danger:hover {
-  color: #fff;
-  background-color: #db4437;
-  border-color: #db4437;
+    button {
+      text-transform: none;
+    }
+  }
 }
