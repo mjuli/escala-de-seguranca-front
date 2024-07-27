@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MarcacaoEscalaComponent } from './marcacao-escala.component';
+import { ListaPolicialComponent } from './lista-policial.component';
 
-describe('MarcacaoEscalaComponent', () => {
-  let component: MarcacaoEscalaComponent;
-  let fixture: ComponentFixture<MarcacaoEscalaComponent>;
+describe('ListaPolicialComponent', () => {
+  let component: ListaPolicialComponent;
+  let fixture: ComponentFixture<ListaPolicialComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MarcacaoEscalaComponent]
+      imports: [ListaPolicialComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(MarcacaoEscalaComponent);
+    fixture = TestBed.createComponent(ListaPolicialComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

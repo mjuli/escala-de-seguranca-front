@@ -1,16 +1,16 @@
 import { Component } from '@angular/core';
-import { Local } from '../../models/local';
-import { LocalService } from '../../services/local.service';
 import { FormsModule } from '@angular/forms';
+import { Local } from '../../../models/local';
+import { LocalService } from '../../../services/local.service';
 
 @Component({
-  selector: 'app-local',
+  selector: 'app-lista-local',
   standalone: true,
   imports: [FormsModule],
-  templateUrl: './local.component.html',
-  styleUrl: './local.component.scss',
+  templateUrl: './lista-local.component.html',
+  styleUrl: './lista-local.component.scss',
 })
-export class LocalComponent {
+export class ListaLocalComponent {
   locais: Local[] = [];
   selectedLocal: Local | null = null;
 

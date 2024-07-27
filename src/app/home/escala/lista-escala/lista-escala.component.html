@@ -1,3 +1,4 @@
+<p>lista-escala works!</p>
 <div class="escala-container">
   <div class="list-card">
     <h2>Listagem de Escalas</h2>
@@ -22,13 +23,15 @@
   </div>
 
   <div class="form-card">
-    <h2>{{ editMode ? 'Editar Escala' : 'Cadastrar Nova Escala' }}</h2>
+    <h2>{{ editMode ? "Editar Escala" : "Cadastrar Nova Escala" }}</h2>
     <form [formGroup]="escalaForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
         <input placeholder="Nome" formControlName="nome" />
       </div>
       <div class="form-actions">
-        <button type="submit">{{ editMode ? 'Editar Escala' : 'Cadastrar Escala' }}</button>
+        <button type="submit">
+          {{ editMode ? "Editar Escala" : "Cadastrar Escala" }}
+        </button>
       </div>
     </form>
   </div>
