@@ -1,48 +1,73 @@
-import { Component } from '@angular/core';
-import { Escala } from '../../models/escala';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { EscalaService } from '../../services/escala.service';
+import { Escala } from '../../models/escala';
 
 @Component({
   selector: 'app-escala',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, ReactiveFormsModule, MatInputModule, MatButtonModule, MatCardModule],
   templateUrl: './escala.component.html',
-  styleUrl: './escala.component.scss',
+  styleUrls: ['./escala.component.scss'],
 })
-export class EscalaComponent {
-  escalas: any;
+export class EscalaComponent implements OnInit {
+  escalas: Escala[] = [];
+  escalaForm: FormGroup;
+  editMode: boolean = false;
+  currentEscalaId: number | null = null;
 
-  escalaId: number | null = null;
-  escala: Escala | null = null;
+  constructor(private escalaService: EscalaService, private fb: FormBuilder) {
+    this.escalaForm = this.fb.group({
+      nome: ['', Validators.required],
+    });
+  }
 
-  constructor(private route: ActivatedRoute, private service: EscalaService) {}
+  ngOnInit() {
+    this.loadEscalas();
+  }
 
-  ngOnInit(): void {
-    // Obtemos o id da rota
-    this.route.paramMap.subscribe((params) => {
-      const id = params.get('id');
-      if (id) {
-        this.escalaId = +id;
-        this.getEscala(this.escalaId);
+  loadEscalas() {
+    this.escalaService.getEscalas().subscribe((data: Escala[]) => {
+      this.escalas = data;
+    });
+  }
+
+  onSubmit() {
+    if (this.escalaForm.valid) {
+      const escala: Escala = this.escalaForm.value;
+      if (this.editMode && this.currentEscalaId !== null) {
+        this.escalaService.updateEscala(this.currentEscalaId, escala).subscribe(() => {
+          this.loadEscalas();
+          this.resetForm();
+        });
+      } else {
+        this.escalaService.createEscala(escala).subscribe(() => {
+          this.loadEscalas();
+          this.resetForm();
+        });
       }
+    }
+  }
+
+  onEdit(escala: Escala) {
+    this.editMode = true;
+    this.currentEscalaId = escala.escalaId;
+    this.escalaForm.patchValue(escala);
+  }
+
+  onDelete(id: number) {
+    this.escalaService.deleteEscala(id).subscribe(() => {
+      this.loadEscalas();
     });
   }
 
-  getEscala(id: number): void {
-    this.service.getEscala(id).subscribe({
-      next: (data: Escala) => (this.escala = data),
-      error: (e) => console.error('Erro ao obter a escala', e),
-    });
-  }
-
-  excluirEscala(arg0: any) {
-    throw new Error('Method not implemented.');
-  }
-  editarEscala(arg0: any) {
-    throw new Error('Method not implemented.');
-  }
-  adicionarEscala() {
-    throw new Error('Method not implemented.');
+  resetForm() {
+    this.escalaForm.reset();
+    this.editMode = false;
+    this.currentEscalaId = null;
   }
 }
