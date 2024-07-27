@@ -1,1 +1,25 @@
-<p>policial works!</p>
+<div class="policial-list">
+  <h2>Lista de Policiais</h2>
+  <ul>
+    @for(policial of policiais; track policial){
+    <li>
+      ID: {{ policial.policialId }}, Nome: {{ policial.nome }}, CPF:
+      {{ policial.cpf }}, Telefone: {{ policial.telefone }}
+    </li>
+    }
+  </ul>
+</div>
+
+<div class="section-container">
+  <div class="section">
+    <h3>Policial</h3>
+    <div class="options">
+      <button (click)="navigateTo('/home/policial')">
+        Cadastrar Novo Policial
+      </button>
+      <button (click)="navigateTo('/home/policial')">
+        Editar Dados do Policial
+      </button>
+    </div>
+  </div>
+</div>

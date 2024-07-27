@@ -1,1 +1,56 @@
-<p>dashboard works!</p>
+<div class="marcacao-escala-list">
+  <h2>Marcações de Escala</h2>
+  <ul>
+    @for( marcacao of marcacoesEscala; track marcacao) {
+    <li>
+      ID: {{ marcacao.marcacaoEscalaId }}, Policial ID:
+      {{ marcacao.policialId }}, Escala ID: {{ marcacao.escalaId }}, Local ID:
+      {{ marcacao.localId }}
+    </li>
+    }
+  </ul>
+</div>
+
+<div class="section-container">
+  <div class="section">
+    <h3>Marcação de Escala</h3>
+    <div class="options">
+      <button (click)="navigateTo('/home/marcacao-escala')">
+        Cadastrar Nova Marcação
+      </button>
+      <button (click)="navigateTo('/home/marcacao-escala')">
+        Editar Marcação
+      </button>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Policial</h3>
+    <div class="options">
+      <button (click)="navigateTo('/home/policial')">
+        Cadastrar Novo Policial
+      </button>
+      <button (click)="navigateTo('/home/policial')">
+        Editar Dados do Policial
+      </button>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Local</h3>
+    <div class="options">
+      <button (click)="navigateTo('/home/local')">Cadastrar Novo Local</button>
+      <button (click)="navigateTo('/home/local')">Editar Local</button>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>Escala</h3>
+    <div class="options">
+      <button (click)="navigateTo('/home/escala')">
+        Cadastrar Nova Escala
+      </button>
+      <button (click)="navigateTo('/home/escala')">Editar Escala</button>
+    </div>
+  </div>
+</div>

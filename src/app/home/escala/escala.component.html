@@ -1,1 +1,39 @@
-<p>escala works!</p>
+<div class="container">
+  <h2>Escalas</h2>
+  <button class="btn btn-primary" (click)="adicionarEscala()">
+    Adicionar Escala
+  </button>
+  <table class="table table-bordered mt-3">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Data/Hora Entrada</th>
+        <th>Data/Hora Saída</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        @for (escala of escalas; track escala) {
+        <td>{{ escala.escalaId }}</td>
+        <td>{{ escala.dataHoraEntrada }}</td>
+        <td>{{ escala.dataHoraSaida }}</td>
+        <td>
+          <button
+            class="btn btn-primary"
+            (click)="editarEscala(escala.escalaId)"
+          >
+            Editar
+          </button>
+          <button
+            class="btn btn-danger"
+            (click)="excluirEscala(escala.escalaId)"
+          >
+            Excluir
+          </button>
+        </td>
+        }
+      </tr>
+    </tbody>
+  </table>
+</div>

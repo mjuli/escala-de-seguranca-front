@@ -1,1 +1,37 @@
-<p>marcacao-escala works!</p>
+<div class="marcacoes-list">
+  <h2>Lista de Marcações de Escala</h2>
+  <ul>
+    @for(marcacao of marcacoes; track marcacao) {
+    <li (onKeyPress)="selectMarcacao(marcacao)">
+      {{ marcacao.marcacaoEscalaId }}
+    </li>
+    }
+  </ul>
+  <button (click)="selectMarcacao(marcacoes[0])">Nova Marcação</button>
+</div>
+
+@if(selectedMarcacao){
+<div class="marcacao-form">
+  <h2>
+    {{
+      selectedMarcacao.marcacaoEscalaId ? "Editar Marcação" : "Nova Marcação"
+    }}
+  </h2>
+  <form (ngSubmit)="saveMarcacao(selectedMarcacao)">
+    <label for="nome">Nome:</label>
+    <input
+      type="text"
+      id="nome"
+      [(ngModel)]="selectedMarcacao.marcacaoEscalaId"
+      name="nome"
+      required
+    />
+
+    <button type="submit">Salvar</button>
+    @if(selectedMarcacao.marcacaoEscalaId){
+    <button type="button" (click)="deleteMarcacao(1)">Excluir</button>
+    }
+    <button type="button" (click)="selectedMarcacao = null">Cancelar</button>
+  </form>
+</div>
+}
