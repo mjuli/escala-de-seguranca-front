@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EscalaComponent } from './escala.component';
+import { FormPolicialComponent } from './form-policial.component';
 
-describe('EscalaComponent', () => {
-  let component: EscalaComponent;
-  let fixture: ComponentFixture<EscalaComponent>;
+describe('FormPolicialComponent', () => {
+  let component: FormPolicialComponent;
+  let fixture: ComponentFixture<FormPolicialComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EscalaComponent]
+      imports: [FormPolicialComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(EscalaComponent);
+    fixture = TestBed.createComponent(FormPolicialComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

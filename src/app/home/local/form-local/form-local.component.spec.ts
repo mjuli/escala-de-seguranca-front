@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LocalComponent } from './local.component';
+import { FormLocalComponent } from './form-local.component';
 
-describe('LocalComponent', () => {
-  let component: LocalComponent;
-  let fixture: ComponentFixture<LocalComponent>;
+describe('FormLocalComponent', () => {
+  let component: FormLocalComponent;
+  let fixture: ComponentFixture<FormLocalComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LocalComponent]
+      imports: [FormLocalComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(LocalComponent);
+    fixture = TestBed.createComponent(FormLocalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

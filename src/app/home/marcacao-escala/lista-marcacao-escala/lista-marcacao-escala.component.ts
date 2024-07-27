@@ -1,16 +1,16 @@
 import { Component } from '@angular/core';
-import { MarcacaoEscala } from '../../models/marcacao-escala';
-import { MarcacaoEscalaService } from '../../services/marcacao-escala.service';
 import { FormsModule } from '@angular/forms';
+import { MarcacaoEscala } from '../../../models/marcacao-escala';
+import { MarcacaoEscalaService } from '../../../services/marcacao-escala.service';
 
 @Component({
-  selector: 'app-marcacao-escala',
+  selector: 'app-lista-marcacao-escala',
   standalone: true,
   imports: [FormsModule],
-  templateUrl: './marcacao-escala.component.html',
-  styleUrl: './marcacao-escala.component.scss',
+  templateUrl: './lista-marcacao-escala.component.html',
+  styleUrl: './lista-marcacao-escala.component.scss',
 })
-export class MarcacaoEscalaComponent {
+export class ListaMarcacaoEscalaComponent {
   marcacoes: MarcacaoEscala[] = [];
   selectedMarcacao: MarcacaoEscala | null = null;
 

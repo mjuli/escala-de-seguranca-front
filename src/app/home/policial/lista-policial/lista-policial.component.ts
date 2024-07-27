@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
-import { Policial } from '../../models/policial';
-import { PolicialService } from '../../services/policial.service';
+import { Policial } from '../../../models/policial';
+import { PolicialService } from '../../../services/policial.service';
 
 @Component({
-  selector: 'app-policial',
+  selector: 'app-lista-policial',
   standalone: true,
   imports: [],
-  templateUrl: './policial.component.html',
-  styleUrl: './policial.component.scss',
+  templateUrl: './lista-policial.component.html',
+  styleUrl: './lista-policial.component.scss',
 })
-export class PolicialComponent {
+export class ListaPolicialComponent {
   policiais: Policial[] = [];
 
   constructor(private service: PolicialService) {}

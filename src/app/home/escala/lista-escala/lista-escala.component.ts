@@ -1,20 +1,31 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { Escala } from '../../../models/escala';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { EscalaService } from '../../../services/escala.service';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { EscalaService } from '../../services/escala.service';
-import { Escala } from '../../models/escala';
 
 @Component({
-  selector: 'app-escala',
+  selector: 'app-lista-escala',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatInputModule, MatButtonModule, MatCardModule],
-  templateUrl: './escala.component.html',
-  styleUrls: ['./escala.component.scss'],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatButtonModule,
+    MatCardModule,
+  ],
+  templateUrl: './lista-escala.component.html',
+  styleUrl: './lista-escala.component.scss',
 })
-export class EscalaComponent implements OnInit {
+export class ListaEscalaComponent {
   escalas: Escala[] = [];
   escalaForm: FormGroup;
   editMode: boolean = false;
@@ -40,10 +51,12 @@ export class EscalaComponent implements OnInit {
     if (this.escalaForm.valid) {
       const escala: Escala = this.escalaForm.value;
       if (this.editMode && this.currentEscalaId !== null) {
-        this.escalaService.updateEscala(this.currentEscalaId, escala).subscribe(() => {
-          this.loadEscalas();
-          this.resetForm();
-        });
+        this.escalaService
+          .updateEscala(this.currentEscalaId, escala)
+          .subscribe(() => {
+            this.loadEscalas();
+            this.resetForm();
+          });
       } else {
         this.escalaService.createEscala(escala).subscribe(() => {
           this.loadEscalas();
