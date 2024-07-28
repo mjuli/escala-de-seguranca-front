@@ -1,13 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { Policial } from '../../../models/policial';
 import { PolicialService } from '../../../services/policial.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import {
+  MatPaginator,
+  MatPaginatorModule,
+  PageEvent,
+} from '@angular/material/paginator';
+import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 
 @Component({
   selector: 'app-lista-policial',
@@ -18,63 +27,53 @@ import { Router } from '@angular/router';
     MatInputModule,
     MatButtonModule,
     MatCardModule,
-    MatIconModule
+    MatIconModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
   ],
   templateUrl: './lista-policial.component.html',
   styleUrls: ['./lista-policial.component.scss'],
 })
-export class ListaPolicialComponent implements OnInit {
-  policiais: Policial[] = [];
-  policialForm: FormGroup;
-  editMode: boolean = false;
-  currentPolicialId: number | null = null;
+export class ListaPolicialComponent implements AfterViewInit {
+  policiais$: Observable<Policial[]>;
+  dataSource = new MatTableDataSource<Policial>();
+  displayedColumns = ['policialId', 'nome', 'cpf', 'telefone', 'acao'];
 
-  currentPage = 1;
-  pageSize = 10;
-  totalItems = 0;
-  totalPages = 0;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private policialService: PolicialService, private fb: FormBuilder, private router: Router) {
-    this.policialForm = this.fb.group({
-      cpf: ['', Validators.required],
-      nome: ['', Validators.required],
-      telefone: ['', Validators.required],
-    });
+  constructor(
+    private policialService: PolicialService,
+    private router: Router,
+    private _liveAnnouncer: LiveAnnouncer,
+    private activatedRoute: ActivatedRoute
+  ) {
+    this.policiais$ = this.loadPoliciais();
+    this.updateList();
   }
 
-  ngOnInit() {
-    this.loadPoliciais();
+  @ViewChild(MatSort) sort!: MatSort;
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+  }
+
+  updateList() {
+    this.policiais$ = this.policialService.getPoliciais();
+    this.policiais$.subscribe((policiais) => {
+      this.dataSource.data = policiais;
+      this.dataSource.paginator = this.paginator;
+    });
   }
 
   loadPoliciais() {
-    this.policialService.getPoliciaisPaginados(this.currentPage, this.pageSize).subscribe((response) => {
-      this.policiais = response.data;
-      this.totalItems = response.totalCount;
-      this.totalPages = response.totalPages;
+    return this.policialService.getPoliciais();
+  }
+
+  onEdit(id: Number) {
+    this.router.navigate([`${id}/edit`], {
+      relativeTo: this.activatedRoute,
     });
-  }
-
-  onSubmit() {
-    if (this.policialForm.valid) {
-      const policial: Policial = this.policialForm.value;
-      if (this.editMode && this.currentPolicialId !== null) {
-        this.policialService.updatePolicial(this.currentPolicialId, policial).subscribe(() => {
-          this.loadPoliciais();
-          this.resetForm();
-        });
-      } else {
-        this.policialService.createPolicial(policial).subscribe(() => {
-          this.loadPoliciais();
-          this.resetForm();
-        });
-      }
-    }
-  }
-
-  onEdit(policial: Policial) {
-    this.editMode = true;
-    this.currentPolicialId = policial.policialId;
-    this.policialForm.patchValue(policial);
   }
 
   onDelete(id: number) {
@@ -83,15 +82,8 @@ export class ListaPolicialComponent implements OnInit {
     });
   }
 
-  resetForm() {
-    this.policialForm.reset();
-    this.editMode = false;
-    this.currentPolicialId = null;
-  }
-
-  onPageChange(page: number): void {
-    this.currentPage = page;
-    this.loadPoliciais();
+  onPageChange(event: PageEvent) {
+    this.dataSource.paginator = this.paginator;
   }
 
   navigateTo(path: string) {
@@ -105,5 +97,13 @@ export class ListaPolicialComponent implements OnInit {
   onLogout() {
     console.log('Logout clicked');
     this.router.navigate(['/login']);
+  }
+
+  announceSortChange(sortState: Sort) {
+    if (sortState.direction) {
+      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+    } else {
+      this._liveAnnouncer.announce('Sorting cleared');
+    }
   }
 }

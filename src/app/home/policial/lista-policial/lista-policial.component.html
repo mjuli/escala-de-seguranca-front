@@ -1,5 +1,5 @@
 <div class="top-bar">
-  <img src="assets/escala2.png" alt="Logo" class="logo">
+  <img src="assets/escala2.png" alt="Logo" class="logo" />
   <h1>ESCALA DE SEGURANÇA</h1>
   <button mat-icon-button class="logout-button" (click)="onLogout()">
     <mat-icon>logout</mat-icon>
@@ -9,60 +9,105 @@
   <div class="list-card">
     <div class="header">
       <h2>Listagem de Policiais</h2>
-      <button mat-stroked-button color="primary" (click)="goHome()">Voltar</button>
+      <button mat-stroked-button color="primary" (click)="goHome()">
+        Voltar
+      </button>
     </div>
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>CPF</th>
-          <th>Nome</th>
-          <th>Telefone</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let policial of policiais">
-          <td>{{ policial.policialId }}</td>
-          <td>{{ policial.cpf }}</td>
-          <td>{{ policial.nome }}</td>
-          <td>{{ policial.telefone }}</td>
-          <td>
-            <button (click)="onEdit(policial)">Editar</button>
-            <button (click)="onDelete(policial.policialId)">Excluir</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="pagination">
-      <button [disabled]="currentPage === 1" (click)="onPageChange(currentPage - 1)">Anterior</button>
-      <span>Página {{ currentPage }} de {{ totalPages }}</span>
-      <button [disabled]="currentPage === totalPages" (click)="onPageChange(currentPage + 1)">Próxima</button>
-    </div>
-  </div>
+    <div class="mat-elevation-z8">
+      <table
+        mat-table
+        [dataSource]="dataSource"
+        matSort
+        (matSortChange)="announceSortChange($event)"
+      >
+        <!-- Id Column -->
+        <ng-container matColumnDef="policialId">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            sortActionDescription="Sort by number"
+          >
+            ID
+          </th>
+          <td mat-cell *matCellDef="let policial">{{ policial.policialId }}</td>
+        </ng-container>
 
-  <div *ngIf="editMode" class="form-card">
-    <h2>{{ currentPolicialId ? "Editar Policial" : "Novo Policial" }}</h2>
-    <form [formGroup]="policialForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="cpf">CPF:</label>
-        <input type="text" id="cpf" formControlName="cpf" required />
-      </div>
-      <div class="form-group">
-        <label for="nome">Nome:</label>
-        <input type="text" id="nome" formControlName="nome" required />
-      </div>
-      <div class="form-group">
-        <label for="telefone">Telefone:</label>
-        <input type="text" id="telefone" formControlName="telefone" required />
-      </div>
-      <div class="form-actions">
-        <button mat-raised-button color="primary" type="submit">Salvar</button>
-        <button mat-stroked-button color="warn" type="button" (click)="resetForm()">Cancelar</button>
-        <button *ngIf="editMode" mat-raised-button color="warn" type="button" (click)="onDelete(currentPolicialId!)">
-          Excluir
-        </button>
-      </div>
-    </form>
+        <!-- Nome Column -->
+        <ng-container matColumnDef="nome">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            sortActionDescription="Sort by name"
+          >
+            Nome
+          </th>
+          <td mat-cell *matCellDef="let policial">{{ policial.nome }}</td>
+        </ng-container>
+
+        <!-- CPF Column -->
+        <ng-container matColumnDef="cpf">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            sortActionDescription="Sort by number"
+          >
+            CPF
+          </th>
+          <td mat-cell *matCellDef="let policial">{{ policial.cpf }}</td>
+        </ng-container>
+
+        <!-- Telefone Column -->
+        <ng-container matColumnDef="telefone">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            sortActionDescription="Sort by number"
+          >
+            Telefone
+          </th>
+          <td mat-cell *matCellDef="let policial">{{ policial.telefone }}</td>
+        </ng-container>
+
+        <!-- Acoes Column -->
+        <ng-container matColumnDef="acao">
+          <th mat-header-cell *matHeaderCellDef>Ação</th>
+          <td mat-cell *matCellDef="let policial">
+            <button
+              mat-icon-button
+              color="primary"
+              aria-label="Editar"
+              (click)="onEdit(policial.policialId)"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="warn"
+              aria-label="Remover"
+              (click)="onDelete(policial.policialId)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <mat-paginator
+        [length]="dataSource.data.length"
+        [pageSize]="10"
+        [pageSizeOptions]="[5, 10, 25, 100]"
+        [showFirstLastButtons]="true"
+        (page)="onPageChange($event)"
+        aria-label="Selecione página"
+      >
+      </mat-paginator>
+    </div>
   </div>
 </div>
