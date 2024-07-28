@@ -1,45 +1,92 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 import { Local } from '../../../models/local';
 import { LocalService } from '../../../services/local.service';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-lista-local',
   standalone: true,
-  imports: [FormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatButtonModule,
+    MatCardModule,
+  ],
   templateUrl: './lista-local.component.html',
-  styleUrl: './lista-local.component.scss',
+  styleUrls: ['./lista-local.component.scss'],
 })
-export class ListaLocalComponent {
+export class ListaLocalComponent implements OnInit {
   locais: Local[] = [];
-  selectedLocal: Local | null = null;
+  localForm: FormGroup;
+  editMode: boolean = false;
+  currentLocalId: number | null = null;
 
-  constructor(private service: LocalService) {}
+  currentPage = 1;
+  pageSize = 10;
+  totalItems = 0;
+  totalPages = 0;
 
-  ngOnInit(): void {
-    this.getLocais();
+  constructor(private localService: LocalService, private fb: FormBuilder) {
+    this.localForm = this.fb.group({
+      nome: ['', Validators.required],
+      descricao: ['', Validators.required],
+    });
   }
 
-  getLocais(): void {
-    this.service.getLocais().subscribe((locais) => (this.locais = locais));
+  ngOnInit() {
+    this.loadLocais();
   }
 
-  selectLocal(local: Local | null): void {
-    this.selectedLocal = local;
+  loadLocais() {
+    this.localService.getLocaisPaginados(this.currentPage, this.pageSize).subscribe((response) => {
+      this.locais = response.data;
+      this.totalItems = response.totalCount;
+      this.totalPages = response.totalPages;
+    });
   }
 
-  saveLocal(local: Local): void {
-    if (local.localId) {
-      this.service
-        .updateLocal(local.localId, local)
-        .subscribe(() => this.getLocais());
-    } else {
-      this.service.createLocal(local).subscribe(() => this.getLocais());
+  onSubmit() {
+    if (this.localForm.valid) {
+      const local: Local = this.localForm.value;
+      if (this.editMode && this.currentLocalId !== null) {
+        this.localService.updateLocal(this.currentLocalId, local).subscribe(() => {
+          this.loadLocais();
+          this.resetForm();
+        });
+      } else {
+        this.localService.createLocal(local).subscribe(() => {
+          this.loadLocais();
+          this.resetForm();
+        });
+      }
     }
-    this.selectedLocal = null;
   }
 
-  deleteLocal(id: number): void {
-    this.service.deleteLocal(id).subscribe(() => this.getLocais());
+  onEdit(local: Local) {
+    this.editMode = true;
+    this.currentLocalId = local.localId;
+    this.localForm.patchValue(local);
+  }
+
+  onDelete(id: number) {
+    this.localService.deleteLocal(id).subscribe(() => {
+      this.loadLocais();
+    });
+  }
+
+  resetForm() {
+    this.localForm.reset();
+    this.editMode = false;
+    this.currentLocalId = null;
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadLocais();
   }
 }

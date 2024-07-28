@@ -1,35 +1,52 @@
-<div class="locais-list">
-  <h2>Lista de Locais</h2>
-  <ul>
-    @for(local of locais; track local){
-    <li (onKeyPress)="selectLocal(local)">
-      {{ local.nome }}
-    </li>
-    }
-  </ul>
-  <button (click)="selectLocal(null)">Novo Local</button>
-</div>
+<div class="local-container">
+  <div class="list-card">
+    <h2>Listagem de Locais</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Descrição</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let local of locais">
+          <td>{{ local.localId }}</td>
+          <td>{{ local.nome }}</td>
+          <td>{{ local.descricao }}</td>
+          <td>
+            <button (click)="onEdit(local)">Editar</button>
+            <button (click)="onDelete(local.localId)">Excluir</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination">
+      <button [disabled]="currentPage === 1" (click)="onPageChange(currentPage - 1)">Anterior</button>
+      <span>Página {{ currentPage }} de {{ totalPages }}</span>
+      <button [disabled]="currentPage === totalPages" (click)="onPageChange(currentPage + 1)">Próxima</button>
+    </div>
+  </div>
 
-@if(selectedLocal) {
-<div class="local-form">
-  <h2>{{ selectedLocal.localId ? "Editar Local" : "Novo Local" }}</h2>
-  <form (ngSubmit)="saveLocal(selectedLocal)">
-    <label for="nome">Nome:</label>
-    <input
-      type="text"
-      id="nome"
-      [(ngModel)]="selectedLocal.nome"
-      name="nome"
-      required
-    />
-
-    <button type="submit">Salvar</button>
-    @if(selectedLocal.localId){
-    <button type="button" (click)="deleteLocal(selectedLocal.localId)">
-      Excluir
-    </button>
-    }
-    <button type="button" (click)="selectedLocal = null">Cancelar</button>
-  </form>
+  <div *ngIf="editMode" class="form-card">
+    <h2>{{ currentLocalId ? "Editar Local" : "Novo Local" }}</h2>
+    <form [formGroup]="localForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" formControlName="nome" required />
+      </div>
+      <div class="form-group">
+        <label for="descricao">Descrição:</label>
+        <textarea id="descricao" formControlName="descricao" required></textarea>
+      </div>
+      <div class="form-actions">
+        <button mat-raised-button color="primary" type="submit">Salvar</button>
+        <button mat-stroked-button color="warn" type="button" (click)="resetForm()">Cancelar</button>
+        <button *ngIf="editMode" mat-raised-button color="warn" type="button" (click)="onDelete(currentLocalId!)">
+          Excluir
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
-}
