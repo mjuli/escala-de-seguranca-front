@@ -1,33 +1,136 @@
-.policial-list {
-  margin-bottom: 20px;
-}
-
-.section-container {
+.policial-container {
   display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #f5f5f5;
 
-.section {
-  flex: 1;
-  min-width: 200px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-}
+  .list-card,
+  .form-card {
+    width: 80%;
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid #ccc;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: white;
+  }
 
-.options button {
-  display: block;
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 10px;
-  border: none;
-  background-color: #007bff;
-  color: white;
-  cursor: pointer;
-  border-radius: 4px;
-}
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 
-.options button:hover {
-  background-color: #0056b3;
+    h2 {
+      margin: 0;
+    }
+
+    button {
+      margin-left: auto;
+    }
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+
+    th,
+    td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-transform: uppercase;
+      margin-right: 10px;
+    }
+
+    button[type='submit'] {
+      background-color: #1976d2;
+      color: white;
+    }
+
+    button[type='submit']:hover {
+      background-color: #1565c0;
+    }
+
+    button[type='button'] {
+      background-color: #f5f5f5;
+      color: #1976d2;
+    }
+
+    button[type='button']:hover {
+      background-color: #e0e0e0;
+    }
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 10px;
+
+    button {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #1976d2;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    span {
+      font-weight: bold;
+    }
+  }
 }

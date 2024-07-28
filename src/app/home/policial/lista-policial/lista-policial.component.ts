@@ -1,26 +1,102 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Policial } from '../../../models/policial';
 import { PolicialService } from '../../../services/policial.service';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-lista-policial',
   standalone: true,
-  imports: [],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatButtonModule,
+    MatCardModule,
+  ],
   templateUrl: './lista-policial.component.html',
-  styleUrl: './lista-policial.component.scss',
+  styleUrls: ['./lista-policial.component.scss'],
 })
-export class ListaPolicialComponent {
+export class ListaPolicialComponent implements OnInit {
   policiais: Policial[] = [];
+  policialForm: FormGroup;
+  editMode: boolean = false;
+  currentPolicialId: number | null = null;
 
-  constructor(private service: PolicialService) {}
+  currentPage = 1;
+  pageSize = 10;
+  totalItems = 0;
+  totalPages = 0;
 
-  ngOnInit(): void {
-    this.service.getPoliciais().subscribe((data) => {
-      this.policiais = data;
+  constructor(private policialService: PolicialService, private fb: FormBuilder, private router: Router) {
+    this.policialForm = this.fb.group({
+      cpf: ['', Validators.required],
+      nome: ['', Validators.required],
+      telefone: ['', Validators.required],
     });
   }
 
-  navigateTo(route: string) {
-    window.location.href = route;
+  ngOnInit() {
+    this.loadPoliciais();
+  }
+
+  loadPoliciais() {
+    this.policialService.getPoliciaisPaginados(this.currentPage, this.pageSize).subscribe((response) => {
+      this.policiais = response.data;
+      this.totalItems = response.totalCount;
+      this.totalPages = response.totalPages;
+    });
+  }
+
+  onSubmit() {
+    if (this.policialForm.valid) {
+      const policial: Policial = this.policialForm.value;
+      if (this.editMode && this.currentPolicialId !== null) {
+        this.policialService.updatePolicial(this.currentPolicialId, policial).subscribe(() => {
+          this.loadPoliciais();
+          this.resetForm();
+        });
+      } else {
+        this.policialService.createPolicial(policial).subscribe(() => {
+          this.loadPoliciais();
+          this.resetForm();
+        });
+      }
+    }
+  }
+
+  onEdit(policial: Policial) {
+    this.editMode = true;
+    this.currentPolicialId = policial.policialId;
+    this.policialForm.patchValue(policial);
+  }
+
+  onDelete(id: number) {
+    this.policialService.deletePolicial(id).subscribe(() => {
+      this.loadPoliciais();
+    });
+  }
+
+  resetForm() {
+    this.policialForm.reset();
+    this.editMode = false;
+    this.currentPolicialId = null;
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadPoliciais();
+  }
+
+  navigateTo(path: string) {
+    this.router.navigate([path]);
+  }
+
+  goHome() {
+    this.router.navigate(['/home']);
   }
 }

@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Policial } from '../models/policial';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Policial } from '../models/policial';
 
 @Injectable({
   providedIn: 'root',
@@ -29,5 +29,13 @@ export class PolicialService {
 
   deletePolicial(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  getPoliciaisPaginados(page: number, pageSize: number): Observable<any> {
+    const params = new HttpParams()
+      .set('pageNumber', page.toString())
+      .set('pageSize', pageSize.toString());
+
+    return this.http.get<any>(`${this.apiUrl}/pagination`, { params });
   }
 }
