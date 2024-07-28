@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-lista-local',
@@ -31,7 +32,7 @@ export class ListaLocalComponent implements OnInit {
   totalItems = 0;
   totalPages = 0;
 
-  constructor(private localService: LocalService, private fb: FormBuilder) {
+  constructor(private localService: LocalService, private fb: FormBuilder, private router: Router) {
     this.localForm = this.fb.group({
       nome: ['', Validators.required],
       descricao: ['', Validators.required],
@@ -88,5 +89,9 @@ export class ListaLocalComponent implements OnInit {
   onPageChange(page: number): void {
     this.currentPage = page;
     this.loadLocais();
+  }
+
+  goHome() {
+    this.router.navigate(['/home']);
   }
 }

@@ -1,7 +1,9 @@
-<p>lista-escala works!</p>
 <div class="escala-container">
   <div class="list-card">
-    <h2>Listagem de Escalas</h2>
+    <div class="header">
+      <h2>Listagem de Escalas</h2>
+      <button mat-stroked-button color="primary" (click)="goHome()">Voltar</button>
+    </div>
     <table>
       <thead>
         <tr>
@@ -24,5 +26,35 @@
         </tr>
       </tbody>
     </table>
+    <div class="pagination">
+      <button [disabled]="currentPage === 1" (click)="onPageChange(currentPage - 1)">Anterior</button>
+      <span>Página {{ currentPage }} de {{ totalPages }}</span>
+      <button [disabled]="currentPage === totalPages" (click)="onPageChange(currentPage + 1)">Próxima</button>
+    </div>
+  </div>
+
+  <div *ngIf="editMode" class="form-card">
+    <h2>{{ currentEscalaId ? "Editar Escala" : "Nova Escala" }}</h2>
+    <form [formGroup]="escalaForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" formControlName="nome" required />
+      </div>
+      <div class="form-group">
+        <label for="dataEntrada">Data Entrada:</label>
+        <input type="date" id="dataEntrada" formControlName="dataEntrada" required />
+      </div>
+      <div class="form-group">
+        <label for="dataSaida">Data Saída:</label>
+        <input type="date" id="dataSaida" formControlName="dataSaida" required />
+      </div>
+      <div class="form-actions">
+        <button mat-raised-button color="primary" type="submit">Salvar</button>
+        <button mat-stroked-button color="warn" type="button" (click)="resetForm()">Cancelar</button>
+        <button *ngIf="editMode" mat-raised-button color="warn" type="button" (click)="onDelete(currentEscalaId!)">
+          Excluir
+        </button>
+      </div>
+    </form>
   </div>
 </div>
