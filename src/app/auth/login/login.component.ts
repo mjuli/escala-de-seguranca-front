@@ -23,7 +23,7 @@ export class LoginComponent {
 
   onLogin() {
     if (this.username === 'admin' && this.password === 'admin') {
-      this.router.navigate(['/escala']);
+      this.router.navigate(['/home']);
     } else {
       alert('Credenciais inválidas!');
     }

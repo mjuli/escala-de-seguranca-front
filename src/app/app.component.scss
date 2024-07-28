@@ -1,19 +1,24 @@
 .top-bar {
   display: flex;
   align-items: center;
-  padding: 10px 20px;
+  padding: 5px 10px;
   background-color: #4a76a1;
   color: white;
 
   .logo {
-    height: 50px;
+    height: 55px;
     margin-right: 10px;
-    size: 100%;
   }
 
   h1 {
     margin: 0;
     font-size: 1.5em;
+    flex-grow: 1;
+  }
+
+  .logout-button {
+    color: white;
+    // left: 980px;
   }
 }
 

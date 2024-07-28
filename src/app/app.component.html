@@ -1,38 +1,41 @@
 <div class="top-bar">
   <img src="assets/escala2.png" alt="Logo" class="logo">
   <h1>ESCALA DE SEGURANÇA</h1>
+  <button mat-icon-button class="logout-button" (click)="onLogout()">
+    <mat-icon>logout</mat-icon>
+  </button>
 </div>
-
+<!-- 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="#">EscalaSegurancaAPI</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link" routerLink="/login" routerLinkActive="active"
-          >Login</a
-        >
+        <a class="nav-link" routerLink="/login" routerLinkActive="active">Login</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/home" routerLinkActive="active"
-          >Home</a
-        >
+        <a class="nav-link" routerLink="/home" routerLinkActive="active">Home</a>
       </li>
-
       <li class="nav-item">
-        <a class="nav-link" routerLink="/home/escala">Escala</a>
+        <a class="nav-link" routerLink="/home/escala">Lista Escala</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/home/escala/new">Form Escala</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" routerLink="/home/local">Local</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" routerLink="/home/marcacao-escala"
-          >Marcação de Escala</a
-        >
+        <a class="nav-link" routerLink="/home/marcacao-escala">Marcação de Escala</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" routerLink="/home/policial">Policial</a>
       </li>
     </ul>
   </div>
-</nav>
+</nav> -->
+
 <router-outlet></router-outlet>

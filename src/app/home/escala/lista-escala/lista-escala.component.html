@@ -6,13 +6,17 @@
       <thead>
         <tr>
           <th>ID</th>
+          <th>Nome</th>
           <th>Data Entrada</th>
           <th>Data Saída</th>
+          <th>Ações</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let escala of escalas">
           <td>{{ escala.escalaId }}</td>
+          <td>{{ escala.dataHoraEntrada }}</td>
+          <td>{{ escala.dataHoraSaida }}</td>
           <td>
             <button (click)="onEdit(escala)">Editar</button>
             <button (click)="onDelete(escala.escalaId)">Excluir</button>
@@ -20,19 +24,5 @@
         </tr>
       </tbody>
     </table>
-  </div>
-
-  <div class="form-card">
-    <h2>{{ editMode ? "Editar Escala" : "Cadastrar Nova Escala" }}</h2>
-    <form [formGroup]="escalaForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <input placeholder="Nome" formControlName="nome" />
-      </div>
-      <div class="form-actions">
-        <button type="submit">
-          {{ editMode ? "Editar Escala" : "Cadastrar Escala" }}
-        </button>
-      </div>
-    </form>
   </div>
 </div>
