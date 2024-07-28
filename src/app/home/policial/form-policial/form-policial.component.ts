@@ -5,6 +5,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PolicialService } from '../../../services/policial.service';
 import { Policial } from '../../../models/policial';
@@ -19,6 +20,7 @@ import { Policial } from '../../../models/policial';
     MatButtonModule,
     MatCardModule,
     MatIconModule,
+    MatSnackBarModule
   ],
   templateUrl: './form-policial.component.html',
   styleUrls: ['./form-policial.component.scss'],
@@ -32,7 +34,8 @@ export class FormPolicialComponent implements OnInit {
     private fb: FormBuilder,
     private policialService: PolicialService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private snackBar: MatSnackBar
   ) {
     this.policialForm = this.fb.group({
       cpf: ['', Validators.required],
@@ -63,10 +66,16 @@ export class FormPolicialComponent implements OnInit {
       if (this.editMode && this.currentPolicialId !== null) {
         this.policialService.updatePolicial(this.currentPolicialId, policial).subscribe(() => {
           this.router.navigate(['/home/policial']);
+          this.snackBar.open('Policial atualizado com sucesso!', 'Fechar', {
+            duration: 3000,
+          });
         });
       } else {
         this.policialService.createPolicial(policial).subscribe(() => {
           this.router.navigate(['/home/policial']);
+          this.snackBar.open('Policial criado com sucesso!', 'Fechar', {
+            duration: 3000,
+          });
         });
       }
     }
@@ -88,5 +97,9 @@ export class FormPolicialComponent implements OnInit {
     this.policialForm.reset();
     this.editMode = false;
     this.currentPolicialId = null;
+  }
+  onLogout() {
+    console.log('Logout clicked');
+    this.router.navigate(['/login']);
   }
 }

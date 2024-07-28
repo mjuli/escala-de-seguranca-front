@@ -5,6 +5,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EscalaService } from '../../../services/escala.service';
 import { Escala } from '../../../models/escala';
@@ -25,7 +26,8 @@ export class FormEscalaComponent implements OnInit {
     private fb: FormBuilder,
     private escalaService: EscalaService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private snackBar: MatSnackBar
   ) {
     this.escalaForm = this.fb.group({
       nome: ['', Validators.required],
@@ -55,16 +57,26 @@ export class FormEscalaComponent implements OnInit {
       const escala: Escala = this.escalaForm.value;
       if (this.editMode && this.currentEscalaId !== null) {
         this.escalaService.updateEscala(this.currentEscalaId, escala).subscribe(() => {
-          this.router.navigate([`/home/escala/${this.currentEscalaId}/edit`]);
+          this.router.navigate(['/home/escala']);
+          this.snackBar.open('Escala atualizada com sucesso!', 'Fechar', {
+            duration: 3000,
+          });
         });
       } else {
         this.escalaService.createEscala(escala).subscribe(() => {
-          this.resetForm();
+          this.router.navigate(['/home/escala']);
+          this.snackBar.open('Escala criada com sucesso!', 'Fechar', {
+            duration: 3000,
+          });
         });
       }
     }
   }
 
+  onLogout() {
+    console.log('Logout clicked');
+    this.router.navigate(['/login']);
+  }
   onDelete() {
     if (this.currentEscalaId !== null) {
       this.escalaService.deleteEscala(this.currentEscalaId).subscribe(() => {

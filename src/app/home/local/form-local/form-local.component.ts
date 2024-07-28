@@ -5,6 +5,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LocalService } from '../../../services/local.service';
 import { Local } from '../../../models/local';
@@ -25,7 +26,8 @@ export class FormLocalComponent implements OnInit {
     private fb: FormBuilder,
     private localService: LocalService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private snackBar: MatSnackBar
   ) {
     this.localForm = this.fb.group({
       nome: ['', Validators.required],
@@ -54,15 +56,22 @@ export class FormLocalComponent implements OnInit {
       const local: Local = this.localForm.value;
       if (this.editMode && this.currentLocalId !== null) {
         this.localService.updateLocal(this.currentLocalId, local).subscribe(() => {
-          this.router.navigate([`/home/local/${this.currentLocalId}/edit`]);
+          this.router.navigate(['/home/local']);
+          this.snackBar.open('Local Atualizado com sucesso!', 'Fechar', {
+            duration: 3000,
+          });
         });
       } else {
         this.localService.createLocal(local).subscribe(() => {
-          this.resetForm();
+          this.router.navigate(['/home/local']);
+          this.snackBar.open('Local criado com sucesso!', 'Fechar', {
+            duration: 3000,
+          });
         });
       }
     }
   }
+  
 
   onDelete() {
     if (this.currentLocalId !== null) {
@@ -84,5 +93,10 @@ export class FormLocalComponent implements OnInit {
     this.localForm.reset();
     this.editMode = false;
     this.currentLocalId = null;
+  }
+
+  onLogout() {
+    console.log('Logout clicked');
+    this.router.navigate(['/login']);
   }
 }

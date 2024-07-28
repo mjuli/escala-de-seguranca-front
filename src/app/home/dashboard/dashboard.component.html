@@ -1,16 +1,10 @@
-<div class="marcacao-escala-list">
-  <h2>Marcações de Escala</h2>
-  <ul>
-    @for( marcacao of marcacoesEscala; track marcacao) {
-    <li>
-      ID: {{ marcacao.marcacaoEscalaId }}, Policial ID:
-      {{ marcacao.policialId }}, Escala ID: {{ marcacao.escalaId }}, Local ID:
-      {{ marcacao.localId }}
-    </li>
-    }
-  </ul>
+<div class="top-bar">
+  <img src="assets/escala2.png" alt="Logo" class="logo">
+  <h1>ESCALA DE SEGURANÇA</h1>
+  <button mat-icon-button class="logout-button" (click)="onLogout()">
+    <mat-icon>logout</mat-icon>
+  </button>
 </div>
-
 <div class="section-container">
   <div class="section">
     <h3>Marcação de Escala</h3>

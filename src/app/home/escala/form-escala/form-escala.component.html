@@ -1,11 +1,16 @@
+<div class="top-bar">
+  <img src="assets/escala2.png" alt="Logo" class="logo">
+  <h1>ESCALA DE SEGURANÇA</h1>
+  <button mat-icon-button class="logout-button" (click)="onLogout()">
+    <mat-icon>logout</mat-icon>
+  </button>
+</div>
+
 <div class="form-container">
   <mat-card>
     <h2>{{ editMode ? 'Editar Escala' : 'Cadastrar Nova Escala' }}</h2>
     <mat-card-content>
       <form [formGroup]="escalaForm" (ngSubmit)="onSubmit()">
-        <div class="form-group">
-          <input placeholder="ID" formControlName="nome" />
-        </div>
         <div class="form-group">
           <p>Dada de Entrada</p>
           <input placeholder="Data de Entrada" formControlName="dataEntrada" type="date" />

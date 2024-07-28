@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 
 @Component({
@@ -17,6 +18,7 @@ import { Router } from '@angular/router';
     MatInputModule,
     MatButtonModule,
     MatCardModule,
+    MatIconModule
   ],
   templateUrl: './lista-policial.component.html',
   styleUrls: ['./lista-policial.component.scss'],
@@ -98,5 +100,10 @@ export class ListaPolicialComponent implements OnInit {
 
   goHome() {
     this.router.navigate(['/home']);
+  }
+
+  onLogout() {
+    console.log('Logout clicked');
+    this.router.navigate(['/login']);
   }
 }
