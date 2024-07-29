@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { JWTTokenService } from '../../services/jwttoken.service'; // Ajuste o caminho de importação
 
 @Component({
   selector: 'app-login',
@@ -19,10 +20,12 @@ export class LoginComponent {
   password: string = '';
   hide = true;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private jwtTokenService: JWTTokenService) {}
 
   onLogin() {
     if (this.username === 'admin' && this.password === 'admin') {
+      const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJhZG1pbiIsIm5hbWUiOiJKb2huIERvZSIsImlhdCI6MTUxNjIzOTAyMn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+      this.jwtTokenService.setToken(token);
       this.router.navigate(['/home']);
     } else {
       alert('Credenciais inválidas!');
