@@ -145,7 +145,7 @@ export class FormPolicialComponent implements OnInit {
     this.currentPolicialId = null;
   }
   onLogout() {
-    console.log('Logout clicked');
+    localStorage.removeItem('jwt-token');
     this.router.navigate(['/login']);
   }
 

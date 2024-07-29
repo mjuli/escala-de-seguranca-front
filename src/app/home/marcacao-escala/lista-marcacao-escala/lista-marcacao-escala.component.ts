@@ -139,7 +139,7 @@ export class ListaMarcacaoEscalaComponent implements AfterViewInit {
   }
 
   onLogout() {
-    console.log('Logout clicked');
+    localStorage.removeItem('jwt-token');
     this.router.navigate(['/login']);
   }
 

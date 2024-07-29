@@ -131,7 +131,7 @@ export class FormEscalaComponent implements OnInit {
   }
 
   onLogout() {
-    console.log('Logout clicked');
+    localStorage.removeItem('jwt-token');
     this.router.navigate(['/login']);
   }
   onDelete() {

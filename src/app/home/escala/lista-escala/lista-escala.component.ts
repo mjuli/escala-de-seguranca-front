@@ -120,7 +120,7 @@ export class ListaEscalaComponent implements AfterViewInit {
   }
 
   onLogout() {
-    console.log('Logout clicked');
+    localStorage.removeItem('jwt-token');
     this.router.navigate(['/login']);
   }
 
