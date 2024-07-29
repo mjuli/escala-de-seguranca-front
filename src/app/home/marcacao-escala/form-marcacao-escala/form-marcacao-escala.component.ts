@@ -165,4 +165,8 @@ export class FormMarcacaoEscalaComponent implements OnInit {
     console.log('Logout clicked');
     this.router.navigate(['/login']);
   }
+
+  navigateTo(path: string) {
+    this.router.navigate([path]);
+  }
 }

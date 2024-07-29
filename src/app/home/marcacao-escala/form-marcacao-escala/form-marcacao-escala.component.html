@@ -7,6 +7,17 @@
     <mat-icon>logout</mat-icon>
   </button>
 </div>
+<div class="main-container">
+  <div class="sidebar">
+    <button mat-button (click)="navigateTo('/home/marcacao-escala')">
+      Marcação de Escala
+    </button>
+    <button mat-button (click)="navigateTo('/home/policial')">Policial</button>
+    <button mat-button (click)="navigateTo('/home/local')">Local</button>
+    <button mat-button (click)="navigateTo('/home/escala')">Escala</button>
+  </div>
+
+  <div class="content">
 <div class="form-container">
   <mat-card>
     <h2>{{ editMode ? "Editar Marcação" : "Nova Marcação" }}</h2>

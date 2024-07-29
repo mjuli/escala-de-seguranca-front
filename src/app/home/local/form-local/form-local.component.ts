@@ -131,7 +131,7 @@ export class FormLocalComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/home']);
+    this.router.navigate(['/home/local']);
   }
 
   resetForm() {
@@ -143,5 +143,9 @@ export class FormLocalComponent implements OnInit {
   onLogout() {
     console.log('Logout clicked');
     this.router.navigate(['/login']);
+  }
+
+  navigateTo(path: string) {
+    this.router.navigate([path]);
   }
 }
