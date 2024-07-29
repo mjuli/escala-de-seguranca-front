@@ -24,11 +24,22 @@ export class LocalService {
   }
 
   updateLocal(id: number, local: Local): Observable<Local> {
+    local.localId = id;
     return this.http.put<Local>(`${this.apiUrl}/${id}`, local);
   }
 
   deleteLocal(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    const body = [
+      {
+        path: '/inativado',
+        op: 'replace',
+        value: true,
+      },
+    ];
+
+    return this.http.patch<any>(`${this.apiUrl}/${id}/UpdatePartial`, body, {
+      responseType: 'text' as 'json',
+    });
   }
 
   getLocaisPaginados(page: number, pageSize: number): Observable<any> {

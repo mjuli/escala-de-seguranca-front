@@ -23,10 +23,8 @@ export const routes: Routes = [
     children: [
       {
         path: '',
-        loadComponent: () =>
-          import('./home/dashboard/dashboard.component').then(
-            (m) => m.DashboardComponent
-          ),
+        redirectTo: 'marcacao-escala',
+        pathMatch: 'full',
       },
       {
         path: 'escala',

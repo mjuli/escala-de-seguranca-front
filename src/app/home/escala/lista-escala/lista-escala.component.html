@@ -1,68 +1,123 @@
 <div class="top-bar">
-  <img src="assets/escala2.png" alt="Logo" class="logo">
+  <a routerLink="/home" routerLinkActive="active" (click)="goHome()">
+    <img src="assets/escala2.png" alt="Logo" class="logo" />
+  </a>
   <h1>ESCALA DE SEGURANÇA</h1>
   <button mat-icon-button class="logout-button" (click)="onLogout()">
     <mat-icon>logout</mat-icon>
   </button>
 </div>
 
-<div class="escala-container">
-  <div class="list-card">
-    <div class="header">
-      <h2>Listagem de Escalas</h2>
-      <button mat-stroked-button color="primary" (click)="goHome()">Voltar</button>
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nome</th>
-          <th>Data Entrada</th>
-          <th>Data Saída</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let escala of escalas">
-          <td>{{ escala.escalaId }}</td>
-          <td>{{ escala.dataHoraEntrada }}</td>
-          <td>{{ escala.dataHoraSaida }}</td>
-          <td>
-            <button (click)="onEdit(escala)">Editar</button>
-            <button (click)="onDelete(escala.escalaId)">Excluir</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="pagination">
-      <button [disabled]="currentPage === 1" (click)="onPageChange(currentPage - 1)">Anterior</button>
-      <span>Página {{ currentPage }} de {{ totalPages }}</span>
-      <button [disabled]="currentPage === totalPages" (click)="onPageChange(currentPage + 1)">Próxima</button>
-    </div>
+<div class="main-container">
+  <div class="sidebar">
+    <button mat-button (click)="navigateTo('/home/marcacao-escala')">
+      Marcação de Escala
+    </button>
+    <button mat-button (click)="navigateTo('/home/policial')">Policial</button>
+    <button mat-button (click)="navigateTo('/home/local')">Local</button>
+    <button mat-button (click)="navigateTo('/home/escala')">Escala</button>
   </div>
 
-  <div *ngIf="editMode" class="form-card">
-    <h2>{{ currentEscalaId ? "Editar Escala" : "Nova Escala" }}</h2>
-    <form [formGroup]="escalaForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="nome">Nome:</label>
-        <input type="text" id="nome" formControlName="nome" required />
+  <div class="content">
+    <div class="escala-container">
+      <div class="list-card">
+        <div class="header">
+          <h2>Listagem de Escalas</h2>
+          <button
+            mat-fab
+            style="float: right"
+            (click)="onAdd()"
+            class="add-button"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+        <table
+          mat-table
+          [dataSource]="dataSource"
+          matSort
+          (matSortChange)="announceSortChange($event)"
+        >
+          <!-- Id Column -->
+          <ng-container matColumnDef="escalaId">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              sortActionDescription="Sort by number"
+            >
+              ID
+            </th>
+            <td mat-cell *matCellDef="let escala">{{ escala.escalaId }}</td>
+          </ng-container>
+
+          <!-- Entrada Column -->
+          <ng-container matColumnDef="dataHoraEntrada">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              sortActionDescription="Sort by name"
+            >
+              Data de Entrada
+            </th>
+            <td mat-cell *matCellDef="let escala">
+              {{ escala.dataHoraEntrada }}
+            </td>
+          </ng-container>
+
+          <!-- Saida Column -->
+          <ng-container matColumnDef="dataHoraSaida">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-sort-header
+              sortActionDescription="Sort by number"
+            >
+              Data de Saída
+            </th>
+            <td mat-cell *matCellDef="let escala">
+              {{ escala.dataHoraSaida }}
+            </td>
+          </ng-container>
+
+          <!-- Acoes Column -->
+          <ng-container matColumnDef="acao">
+            <th mat-header-cell *matHeaderCellDef class="acoes-header">Ação</th>
+            <td mat-cell *matCellDef="let escala" class="acoes-cell">
+              <button
+                mat-icon-button
+                color="primary"
+                aria-label="Editar"
+                (click)="onEdit(escala.escalaId)"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="warn"
+                aria-label="Remover"
+                (click)="onDelete(escala.escalaId)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+
+        <mat-paginator
+          [length]="dataSource.data.length"
+          [pageSize]="10"
+          [pageSizeOptions]="[5, 10, 25, 100]"
+          [showFirstLastButtons]="true"
+          (page)="onPageChange($event)"
+          aria-label="Selecione página"
+        >
+        </mat-paginator>
       </div>
-      <div class="form-group">
-        <label for="dataEntrada">Data Entrada:</label>
-        <input type="date" id="dataEntrada" formControlName="dataEntrada" required />
-      </div>
-      <div class="form-group">
-        <label for="dataSaida">Data Saída:</label>
-        <input type="date" id="dataSaida" formControlName="dataSaida" required />
-      </div>
-      <div class="form-actions">
-        <button mat-raised-button color="primary" type="submit">Salvar</button>
-        <button mat-stroked-button color="warn" type="button" (click)="resetForm()">Cancelar</button>
-        <button *ngIf="editMode" mat-raised-button color="warn" type="button" (click)="onDelete(currentEscalaId!)">
-          Excluir
-        </button>
-      </div>
-    </form>
+    </div>
   </div>
 </div>

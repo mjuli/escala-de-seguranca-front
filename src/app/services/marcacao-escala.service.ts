@@ -1,7 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MarcacaoEscala } from '../models/marcacao-escala';
+import {
+  MarcacaoEscala,
+  MarcacaoEscalaOutput,
+} from '../models/marcacao-escala';
 
 @Injectable({
   providedIn: 'root',
@@ -11,31 +14,47 @@ export class MarcacaoEscalaService {
 
   constructor(private http: HttpClient) {}
 
-  getMarcacaoEscalas(): Observable<MarcacaoEscala[]> {
-    return this.http.get<MarcacaoEscala[]>(this.apiUrl);
+  getMarcacaoEscalas(): Observable<MarcacaoEscalaOutput[]> {
+    return this.http.get<MarcacaoEscalaOutput[]>(this.apiUrl);
   }
 
-  getMarcacaoEscala(id: number): Observable<MarcacaoEscala> {
-    return this.http.get<MarcacaoEscala>(`${this.apiUrl}/${id}`);
+  getMarcacaoEscala(id: number): Observable<MarcacaoEscalaOutput> {
+    return this.http.get<MarcacaoEscalaOutput>(`${this.apiUrl}/${id}`);
   }
 
   createMarcacaoEscala(
     marcacaoEscala: MarcacaoEscala
   ): Observable<MarcacaoEscala> {
-    return this.http.post<MarcacaoEscala>(this.apiUrl, marcacaoEscala);
+    return this.http.post<MarcacaoEscala>(this.apiUrl, marcacaoEscala, {
+      responseType: 'text' as 'json',
+    });
   }
 
   updateMarcacaoEscala(
     id: number,
     marcacaoEscala: MarcacaoEscala
   ): Observable<MarcacaoEscala> {
+    marcacaoEscala.marcacaoEscalaId = id;
     return this.http.put<MarcacaoEscala>(
       `${this.apiUrl}/${id}`,
-      marcacaoEscala
+      marcacaoEscala,
+      {
+        responseType: 'text' as 'json',
+      }
     );
   }
 
   deleteMarcacaoEscala(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    const body = [
+      {
+        path: '/inativado',
+        op: 'replace',
+        value: true,
+      },
+    ];
+
+    return this.http.patch<any>(`${this.apiUrl}/${id}/UpdatePartial`, body, {
+      responseType: 'text' as 'json',
+    });
   }
 }

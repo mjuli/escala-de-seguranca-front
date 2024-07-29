@@ -20,15 +20,30 @@ export class PolicialService {
   }
 
   createPolicial(policial: Policial): Observable<Policial> {
-    return this.http.post<Policial>(this.apiUrl, policial);
+    return this.http.post<Policial>(this.apiUrl, policial, {
+      responseType: 'text' as 'json',
+    });
   }
 
   updatePolicial(id: number, policial: Policial): Observable<Policial> {
-    return this.http.put<Policial>(`${this.apiUrl}/${id}`, policial);
+    policial.policialId = id;
+    return this.http.put<Policial>(`${this.apiUrl}/${id}`, policial, {
+      responseType: 'text' as 'json',
+    });
   }
 
   deletePolicial(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    const body = [
+      {
+        path: '/inativado',
+        op: 'replace',
+        value: true,
+      },
+    ];
+
+    return this.http.patch<any>(`${this.apiUrl}/${id}/UpdatePartial`, body, {
+      responseType: 'text' as 'json',
+    });
   }
 
   getPoliciaisPaginados(page: number, pageSize: number): Observable<any> {

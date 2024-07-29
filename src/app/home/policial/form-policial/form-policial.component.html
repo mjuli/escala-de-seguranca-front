@@ -1,39 +1,65 @@
 <div class="top-bar">
-  <img src="assets/escala2.png" alt="Logo" class="logo">
+  <a routerLink="/home" routerLinkActive="active">
+    <img src="assets/escala2.png" alt="Logo" class="logo" />
+  </a>
   <h1>ESCALA DE SEGURANÇA</h1>
   <button mat-icon-button class="logout-button" (click)="onLogout()">
     <mat-icon>logout</mat-icon>
   </button>
 </div>
-<div class="form-container">
-    <mat-card>
-      <h2>{{ editMode ? "Editar Policial" : "Novo Policial" }}</h2>
-      <form [formGroup]="policialForm" (ngSubmit)="onSubmit()">
-        <div class="form-group">
-          <label for="cpf">CPF:</label>
-          <input type="text" id="cpf" formControlName="cpf" required />
-        </div>
-        <div class="form-group">
-          <label for="nome">Nome:</label>
-          <input type="text" id="nome" formControlName="nome" required />
-        </div>
-        <div class="form-group">
-          <label for="telefone">Telefone:</label>
-          <input type="text" id="telefone" formControlName="telefone" required />
-        </div>
-        <div class="form-actions">
-          <button mat-raised-button color="primary" type="submit">Salvar</button>
-          <button mat-stroked-button color="warn" type="button" (click)="resetForm()">Cancelar</button>
-          <button *ngIf="editMode" mat-raised-button color="warn" type="button" (click)="onDelete()">
-            Excluir
+
+<div class="main-container">
+  <div class="sidebar">
+    <button mat-button (click)="navigateTo('/home/marcacao-escala')">
+      Marcação de Escala
+    </button>
+    <button mat-button (click)="navigateTo('/home/policial')">Policial</button>
+    <button mat-button (click)="navigateTo('/home/local')">Local</button>
+    <button mat-button (click)="navigateTo('/home/escala')">Escala</button>
+  </div>
+
+  <div class="content">
+    <div class="form-container">
+      <mat-card>
+        <h2>{{ editMode ? "Editar Policial" : "Novo Policial" }}</h2>
+        <form [formGroup]="policialForm" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label for="cpf">CPF:</label>
+            <input type="text" id="cpf" formControlName="cpf" required />
+          </div>
+          <div class="form-group">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" formControlName="nome" required />
+          </div>
+          <div class="form-group">
+            <label for="telefone">Telefone:</label>
+            <input
+              type="text"
+              id="telefone"
+              formControlName="telefone"
+              required
+            />
+          </div>
+          <div class="form-actions">
+            <button mat-raised-button color="primary" type="submit">
+              Salvar
+            </button>
+            <button
+              mat-stroked-button
+              color="warn"
+              type="button"
+              (click)="resetForm()"
+            >
+              Cancelar
+            </button>
+          </div>
+        </form>
+        <div class="back-link">
+          <button mat-stroked-button color="primary" (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon> Voltar ao Menu Anterior
           </button>
         </div>
-      </form>
-      <div class="back-link">
-        <button mat-stroked-button color="primary" (click)="goBack()">
-          <mat-icon>arrow_back</mat-icon> Voltar ao Menu Anterior
-        </button>
-      </div>
-    </mat-card>
+      </mat-card>
+    </div>
   </div>
-  
+</div>

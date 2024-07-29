@@ -1,13 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, inject, ViewChild } from '@angular/core';
 import { Escala } from '../../../models/escala';
 import { EscalaService } from '../../../services/escala.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
+import { Observable } from 'rxjs';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import {
+  MatPaginator,
+  MatPaginatorModule,
+  PageEvent,
+} from '@angular/material/paginator';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
+import { DialogDeleteComponent } from '../../dialog/dialog-delete/dialog-delete.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-lista-escala',
@@ -18,86 +36,115 @@ import { Router } from '@angular/router';
     MatInputModule,
     MatButtonModule,
     MatCardModule,
-    MatIconModule
+    MatIconModule,
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    MatPaginatorModule,
+    MatTableModule,
+    MatSortModule,
   ],
   templateUrl: './lista-escala.component.html',
   styleUrls: ['./lista-escala.component.scss'],
 })
-export class ListaEscalaComponent implements OnInit {
-  escalas: Escala[] = [];
-  escalaForm: FormGroup;
-  editMode: boolean = false;
-  currentEscalaId: number | null = null;
+export class ListaEscalaComponent implements AfterViewInit {
+  escalas$: Observable<Escala[]>;
+  dataSource = new MatTableDataSource<Escala>();
+  displayedColumns = ['escalaId', 'dataHoraEntrada', 'dataHoraSaida', 'acao'];
+  readonly dialog = inject(MatDialog);
 
-  currentPage = 1;
-  pageSize = 10;
-  totalItems = 0;
-  totalPages = 0;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private escalaService: EscalaService, private fb: FormBuilder, private router: Router) {
-    this.escalaForm = this.fb.group({
-      nome: ['', Validators.required],
-      dataEntrada: ['', Validators.required],
-      dataSaida: ['', Validators.required],
-    });
+  constructor(
+    private escalaService: EscalaService,
+    private router: Router,
+    private _liveAnnouncer: LiveAnnouncer,
+    private activatedRoute: ActivatedRoute,
+    private snackBar: MatSnackBar
+  ) {
+    this.escalas$ = this.loadEscalas();
+    this.updateList();
   }
 
-  ngOnInit() {
-    this.loadEscalas();
+  @ViewChild(MatSort) sort!: MatSort;
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
   }
 
   loadEscalas() {
-    this.escalaService.getEscalasPaginadas(this.currentPage, this.pageSize).subscribe((response) => {
-      this.escalas = response.data;
-      this.totalItems = response.totalCount;
-      this.totalPages = response.totalPages;
+    return this.escalaService.getEscalas();
+  }
+
+  updateList() {
+    this.escalas$ = this.escalaService.getEscalas();
+    this.escalas$.subscribe((escalas) => {
+      this.dataSource.data = escalas;
+      this.dataSource.paginator = this.paginator;
     });
   }
 
-  onSubmit() {
-    if (this.escalaForm.valid) {
-      const escala: Escala = this.escalaForm.value;
-      if (this.editMode && this.currentEscalaId !== null) {
-        this.escalaService.updateEscala(this.currentEscalaId, escala).subscribe(() => {
-          this.loadEscalas();
-          this.resetForm();
-        });
-      } else {
-        this.escalaService.createEscala(escala).subscribe(() => {
-          this.loadEscalas();
-          this.resetForm();
-        });
-      }
-    }
-  }
-
-  onEdit(escala: Escala) {
-    this.editMode = true;
-    this.currentEscalaId = escala.escalaId;
-    this.escalaForm.patchValue(escala);
+  onEdit(id: Number) {
+    this.router.navigate([`${id}/edit`], {
+      relativeTo: this.activatedRoute,
+    });
   }
 
   onDelete(id: number) {
-    this.escalaService.deleteEscala(id).subscribe(() => {
-      this.loadEscalas();
+    const dialogRef = this.dialog.open(DialogDeleteComponent);
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.escalaService.deleteEscala(id).subscribe({
+          next: () => {
+            this.updateList();
+            this.snackBar.open('Escala excluída com sucesso', 'Fechar', {
+              duration: 3000,
+            });
+          },
+          error: (e) => {
+            console.error(e.error);
+            this.snackBar.open(
+              'Não foi possível excluir escala. Motivo: ' +
+                e.error.toLowerCase(),
+              'Fechar',
+              {
+                duration: 3000,
+              }
+            );
+          },
+        });
+        this.updateList();
+      }
     });
   }
+
   onLogout() {
     console.log('Logout clicked');
     this.router.navigate(['/login']);
   }
-  resetForm() {
-    this.escalaForm.reset();
-    this.editMode = false;
-    this.currentEscalaId = null;
+
+  onPageChange(event: PageEvent) {
+    this.dataSource.paginator = this.paginator;
   }
 
-  onPageChange(page: number): void {
-    this.currentPage = page;
-    this.loadEscalas();
+  navigateTo(path: string) {
+    this.router.navigate([path]);
   }
 
   goHome() {
     this.router.navigate(['/home']);
+  }
+
+  announceSortChange(sortState: Sort) {
+    if (sortState.direction) {
+      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+    } else {
+      this._liveAnnouncer.announce('Sorting cleared');
+    }
+  }
+
+  onAdd() {
+    this.router.navigate(['new'], { relativeTo: this.activatedRoute });
   }
 }
