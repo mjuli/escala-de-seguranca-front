@@ -7,7 +7,7 @@ interface MyJwtPayload extends JwtPayload {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class JWTTokenService {
   private jwtToken: string | null = null;
@@ -18,9 +18,11 @@ export class JWTTokenService {
   }
 
   private loadToken() {
-    this.jwtToken = localStorage.getItem('jwt-token');
-    if (this.jwtToken) {
-      this.decodedToken = jwtDecode<MyJwtPayload>(this.jwtToken);
+    if (typeof localStorage !== 'undefined') {
+      this.jwtToken = localStorage.getItem('jwt-token');
+      if (this.jwtToken) {
+        this.decodedToken = jwtDecode<MyJwtPayload>(this.jwtToken);
+      }
     }
   }
 
@@ -34,13 +36,17 @@ export class JWTTokenService {
 
   setToken(token: string) {
     this.jwtToken = token;
-    localStorage.setItem('jwt-token', token);
-    this.decodedToken = jwtDecode<MyJwtPayload>(token);
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('jwt-token', token);
+      this.decodedToken = jwtDecode<MyJwtPayload>(token);
+    }
   }
 
   removeToken() {
     this.jwtToken = null;
     this.decodedToken = null;
-    localStorage.removeItem('jwt-token');
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem('jwt-token');
+    }
   }
 }
