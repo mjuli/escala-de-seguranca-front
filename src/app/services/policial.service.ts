@@ -24,11 +24,22 @@ export class PolicialService {
   }
 
   updatePolicial(id: number, policial: Policial): Observable<Policial> {
+    policial.policialId = id;
     return this.http.put<Policial>(`${this.apiUrl}/${id}`, policial);
   }
 
   deletePolicial(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    const body = [
+      {
+        path: '/inativado',
+        op: 'replace',
+        value: true,
+      },
+    ];
+
+    return this.http.patch<any>(`${this.apiUrl}/${id}/UpdatePartial`, body, {
+      responseType: 'text' as 'json',
+    });
   }
 
   getPoliciaisPaginados(page: number, pageSize: number): Observable<any> {

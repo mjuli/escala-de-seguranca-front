@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, inject, ViewChild } from '@angular/core';
 import { Policial } from '../../../models/policial';
 import { PolicialService } from '../../../services/policial.service';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -17,6 +17,8 @@ import {
 } from '@angular/material/paginator';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogDeleteComponent } from '../../dialog/dialog-delete/dialog-delete.component';
 
 @Component({
   selector: 'app-lista-policial',
@@ -39,6 +41,7 @@ export class ListaPolicialComponent implements AfterViewInit {
   policiais$: Observable<Policial[]>;
   dataSource = new MatTableDataSource<Policial>();
   displayedColumns = ['policialId', 'nome', 'cpf', 'telefone', 'acao'];
+  readonly dialog = inject(MatDialog);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -77,8 +80,17 @@ export class ListaPolicialComponent implements AfterViewInit {
   }
 
   onDelete(id: number) {
-    this.policialService.deletePolicial(id).subscribe(() => {
-      this.loadPoliciais();
+    console.log('id enviado: ' + id);
+    const dialogRef = this.dialog.open(DialogDeleteComponent);
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.policialService.deletePolicial(id).subscribe(() => {
+          this.updateList();
+        });
+        this.updateList();
+      }
+      console.log('The dialog was closed');
     });
   }
 
