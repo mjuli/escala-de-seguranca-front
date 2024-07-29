@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MarcacaoEscala } from '../../../models/marcacao-escala';
 import { MarcacaoEscalaService } from '../../../services/marcacao-escala.service';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-lista-marcacao-escala',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './lista-marcacao-escala.component.html',
   styleUrl: './lista-marcacao-escala.component.scss',
 })

@@ -1,5 +1,7 @@
 <div class="top-bar">
-  <img src="assets/escala2.png" alt="Logo" class="logo">
+  <a routerLink="/home" routerLinkActive="active">
+    <img src="assets/escala2.png" alt="Logo" class="logo" />
+  </a>
   <h1>ESCALA DE SEGURANÇA</h1>
   <button mat-icon-button class="logout-button" (click)="onLogout()">
     <mat-icon>logout</mat-icon>
@@ -8,31 +10,44 @@
 
 <div class="form-container">
   <mat-card>
-    <h2>{{ editMode ? 'Editar Escala' : 'Cadastrar Nova Escala' }}</h2>
+    <h2>{{ editMode ? "Editar Escala" : "Cadastrar Nova Escala" }}</h2>
     <mat-card-content>
       <form [formGroup]="escalaForm" (ngSubmit)="onSubmit()">
         <div class="form-group">
-          <p>Dada de Entrada</p>
-          <input placeholder="Data de Entrada" formControlName="dataEntrada" type="date" />
+          <p>Data de Entrada</p>
+          <input
+            placeholder="Data de Entrada"
+            formControlName="dataHoraEntrada"
+            type="datetime-local"
+          />
         </div>
         <div class="form-group">
-          <p>Dada de Saida</p>
-          <input placeholder="Data de Saída" formControlName="dataSaida" type="date" />
+          <p>Data de Saída</p>
+          <input
+            placeholder="Data de Saída"
+            formControlName="dataHoraSaida"
+            type="datetime-local"
+          />
         </div>
         <div class="form-actions">
           <button mat-raised-button color="primary" type="submit">
-            {{ editMode ? 'Editar Escala' : 'Cadastrar Escala' }}
+            Salvar
+          </button>
+          <button
+            mat-stroked-button
+            color="warn"
+            type="button"
+            (click)="resetForm()"
+          >
+            Cancelar
           </button>
         </div>
       </form>
+      <div class="back-link">
+        <button mat-stroked-button color="primary" (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon> Voltar ao Menu Anterior
+        </button>
+      </div>
     </mat-card-content>
   </mat-card>
-  <div class="outside-actions">
-    <button mat-raised-button (click)="activateEditMode()">Editar Escala</button>
-    <button mat-raised-button color="warn" *ngIf="editMode" (click)="onDelete()">
-      <mat-icon>delete</mat-icon>
-      Deletar Escala
-    </button>
-    <button mat-raised-button (click)="goBack()"><mat-icon>arrow_back</mat-icon>Voltar</button>
-  </div>
 </div>

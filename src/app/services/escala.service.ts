@@ -20,15 +20,28 @@ export class EscalaService {
   }
 
   createEscala(escala: Escala): Observable<Escala> {
-    return this.http.post<Escala>(this.apiUrl, escala);
+    return this.http.post<Escala>(this.apiUrl, escala, {
+      responseType: 'text' as 'json',
+    });
   }
 
   updateEscala(id: number, escala: Escala): Observable<Escala> {
+    escala.escalaId = id;
     return this.http.put<Escala>(`${this.apiUrl}/${id}`, escala);
   }
 
   deleteEscala(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    const body = [
+      {
+        path: '/inativado',
+        op: 'replace',
+        value: true,
+      },
+    ];
+
+    return this.http.patch<any>(`${this.apiUrl}/${id}/UpdatePartial`, body, {
+      responseType: 'text' as 'json',
+    });
   }
 
   getEscalasPaginadas(page: number, pageSize: number): Observable<any> {

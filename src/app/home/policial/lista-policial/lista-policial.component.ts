@@ -7,7 +7,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
 import { Observable } from 'rxjs';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import {
@@ -33,6 +39,9 @@ import { DialogDeleteComponent } from '../../dialog/dialog-delete/dialog-delete.
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
   ],
   templateUrl: './lista-policial.component.html',
   styleUrls: ['./lista-policial.component.scss'],
@@ -80,7 +89,6 @@ export class ListaPolicialComponent implements AfterViewInit {
   }
 
   onDelete(id: number) {
-    console.log('id enviado: ' + id);
     const dialogRef = this.dialog.open(DialogDeleteComponent);
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -90,7 +98,6 @@ export class ListaPolicialComponent implements AfterViewInit {
         });
         this.updateList();
       }
-      console.log('The dialog was closed');
     });
   }
 
@@ -117,5 +124,9 @@ export class ListaPolicialComponent implements AfterViewInit {
     } else {
       this._liveAnnouncer.announce('Sorting cleared');
     }
+  }
+
+  onAdd() {
+    this.router.navigate(['new'], { relativeTo: this.activatedRoute });
   }
 }

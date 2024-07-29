@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { PolicialService } from '../../../services/policial.service';
 import { Policial } from '../../../models/policial';
 
@@ -20,7 +20,10 @@ import { Policial } from '../../../models/policial';
     MatButtonModule,
     MatCardModule,
     MatIconModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
   ],
   templateUrl: './form-policial.component.html',
   styleUrls: ['./form-policial.component.scss'],
@@ -45,7 +48,7 @@ export class FormPolicialComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params) => {
       if (params['id']) {
         this.editMode = true;
         this.currentPolicialId = +params['id'];
@@ -55,7 +58,7 @@ export class FormPolicialComponent implements OnInit {
   }
 
   loadPolicial(id: number) {
-    this.policialService.getPolicial(id).subscribe(policial => {
+    this.policialService.getPolicial(id).subscribe((policial) => {
       this.policialForm.patchValue(policial);
     });
   }
@@ -64,12 +67,14 @@ export class FormPolicialComponent implements OnInit {
     if (this.policialForm.valid) {
       const policial: Policial = this.policialForm.value;
       if (this.editMode && this.currentPolicialId !== null) {
-        this.policialService.updatePolicial(this.currentPolicialId, policial).subscribe(() => {
-          this.router.navigate(['/home/policial']);
-          this.snackBar.open('Policial atualizado com sucesso!', 'Fechar', {
-            duration: 3000,
+        this.policialService
+          .updatePolicial(this.currentPolicialId, policial)
+          .subscribe(() => {
+            this.router.navigate(['/home/policial']);
+            this.snackBar.open('Policial atualizado com sucesso!', 'Fechar', {
+              duration: 3000,
+            });
           });
-        });
       } else {
         this.policialService.createPolicial(policial).subscribe(() => {
           this.router.navigate(['/home/policial']);
@@ -83,9 +88,11 @@ export class FormPolicialComponent implements OnInit {
 
   onDelete() {
     if (this.currentPolicialId !== null) {
-      this.policialService.deletePolicial(this.currentPolicialId).subscribe(() => {
-        this.router.navigate(['/home/policial']);
-      });
+      this.policialService
+        .deletePolicial(this.currentPolicialId)
+        .subscribe(() => {
+          this.router.navigate(['/home/policial']);
+        });
     }
   }
 

@@ -1,5 +1,7 @@
 <div class="top-bar">
-  <img src="assets/escala2.png" alt="Logo" class="logo" />
+  <a routerLink="/home" routerLinkActive="active">
+    <img src="assets/escala2.png" alt="Logo" class="logo" (click)="goHome()"/>
+  </a>
   <h1>ESCALA DE SEGURANÇA</h1>
   <button mat-icon-button class="logout-button" (click)="onLogout()">
     <mat-icon>logout</mat-icon>
@@ -9,8 +11,8 @@
   <div class="list-card">
     <div class="header">
       <h2>Listagem de Policiais</h2>
-      <button mat-stroked-button color="primary" (click)="goHome()">
-        Voltar
+      <button mat-fab style="float: right" (click)="onAdd()" class="add-button">
+        <mat-icon>add</mat-icon>
       </button>
     </div>
     <div class="mat-elevation-z8">

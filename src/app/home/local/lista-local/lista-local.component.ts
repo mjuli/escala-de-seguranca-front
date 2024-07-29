@@ -7,7 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { Router } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-lista-local',
@@ -18,7 +18,10 @@ import { Router } from '@angular/router';
     MatInputModule,
     MatButtonModule,
     MatCardModule,
-    MatIconModule
+    MatIconModule,
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
   ],
   templateUrl: './lista-local.component.html',
   styleUrls: ['./lista-local.component.scss'],
@@ -34,7 +37,11 @@ export class ListaLocalComponent implements OnInit {
   totalItems = 0;
   totalPages = 0;
 
-  constructor(private localService: LocalService, private fb: FormBuilder, private router: Router) {
+  constructor(
+    private localService: LocalService,
+    private fb: FormBuilder,
+    private router: Router
+  ) {
     this.localForm = this.fb.group({
       nome: ['', Validators.required],
       descricao: ['', Validators.required],
@@ -46,21 +53,25 @@ export class ListaLocalComponent implements OnInit {
   }
 
   loadLocais() {
-    this.localService.getLocaisPaginados(this.currentPage, this.pageSize).subscribe((response) => {
-      this.locais = response.data;
-      this.totalItems = response.totalCount;
-      this.totalPages = response.totalPages;
-    });
+    this.localService
+      .getLocaisPaginados(this.currentPage, this.pageSize)
+      .subscribe((response) => {
+        this.locais = response.data;
+        this.totalItems = response.totalCount;
+        this.totalPages = response.totalPages;
+      });
   }
 
   onSubmit() {
     if (this.localForm.valid) {
       const local: Local = this.localForm.value;
       if (this.editMode && this.currentLocalId !== null) {
-        this.localService.updateLocal(this.currentLocalId, local).subscribe(() => {
-          this.loadLocais();
-          this.resetForm();
-        });
+        this.localService
+          .updateLocal(this.currentLocalId, local)
+          .subscribe(() => {
+            this.loadLocais();
+            this.resetForm();
+          });
       } else {
         this.localService.createLocal(local).subscribe(() => {
           this.loadLocais();
