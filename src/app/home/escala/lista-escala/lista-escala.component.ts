@@ -25,6 +25,7 @@ import {
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { DialogDeleteComponent } from '../../dialog/dialog-delete/dialog-delete.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-lista-escala',
@@ -58,7 +59,8 @@ export class ListaEscalaComponent implements AfterViewInit {
     private escalaService: EscalaService,
     private router: Router,
     private _liveAnnouncer: LiveAnnouncer,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private snackBar: MatSnackBar
   ) {
     this.escalas$ = this.loadEscalas();
     this.updateList();
@@ -93,8 +95,24 @@ export class ListaEscalaComponent implements AfterViewInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.escalaService.deleteEscala(id).subscribe(() => {
-          this.updateList();
+        this.escalaService.deleteEscala(id).subscribe({
+          next: () => {
+            this.updateList();
+            this.snackBar.open('Escala excluída com sucesso', 'Fechar', {
+              duration: 3000,
+            });
+          },
+          error: (e) => {
+            console.error(e.error);
+            this.snackBar.open(
+              'Não foi possível excluir escala. Motivo: ' +
+                e.error.toLowerCase(),
+              'Fechar',
+              {
+                duration: 3000,
+              }
+            );
+          },
         });
         this.updateList();
       }

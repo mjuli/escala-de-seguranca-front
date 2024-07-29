@@ -1,12 +1,23 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { Router, ActivatedRoute, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import {
+  Router,
+  ActivatedRoute,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
 import { PolicialService } from '../../../services/policial.service';
 import { Policial } from '../../../models/policial';
 
@@ -69,20 +80,45 @@ export class FormPolicialComponent implements OnInit {
       if (this.editMode && this.currentPolicialId !== null) {
         this.policialService
           .updatePolicial(this.currentPolicialId, policial)
-          .subscribe(() => {
-            this.router.navigate(['/home/policial']);
-            this.snackBar.open('Policial atualizado com sucesso!', 'Fechar', {
-              duration: 3000,
-            });
+          .subscribe({
+            next: () => {
+              this.snackBar.open('Policial atualizado com sucesso!', 'Fechar', {
+                duration: 3000,
+              });
+            },
+            error: (e) => {
+              console.error(e.error);
+              this.snackBar.open(
+                'Não foi possível atualizar o policial. Motivo: ' +
+                  e.error.toLowerCase(),
+                'Fechar',
+                {
+                  duration: 3000,
+                }
+              );
+            },
           });
       } else {
-        this.policialService.createPolicial(policial).subscribe(() => {
-          this.router.navigate(['/home/policial']);
-          this.snackBar.open('Policial criado com sucesso!', 'Fechar', {
-            duration: 3000,
-          });
+        this.policialService.createPolicial(policial).subscribe({
+          next: () => {
+            this.snackBar.open('Policial cadastrado com sucesso!', 'Fechar', {
+              duration: 3000,
+            });
+          },
+          error: (e) => {
+            console.error(e.error);
+            this.snackBar.open(
+              'Não foi possível cadastrar policial. Motivo: ' +
+                e.error.toLowerCase(),
+              'Fechar',
+              {
+                duration: 3000,
+              }
+            );
+          },
         });
       }
+      this.router.navigate(['/home/policial']);
     }
   }
 

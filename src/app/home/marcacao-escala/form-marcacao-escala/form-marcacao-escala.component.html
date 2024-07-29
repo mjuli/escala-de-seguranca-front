@@ -1,1 +1,66 @@
-<p>form-marcacao-escala works!</p>
+<div class="top-bar">
+  <a routerLink="/home" routerLinkActive="active">
+    <img src="assets/escala2.png" alt="Logo" class="logo" />
+  </a>
+  <h1>ESCALA DE SEGURANÇA</h1>
+  <button mat-icon-button class="logout-button" (click)="onLogout()">
+    <mat-icon>logout</mat-icon>
+  </button>
+</div>
+<div class="form-container">
+  <mat-card>
+    <h2>{{ editMode ? "Editar Marcação" : "Nova Marcação" }}</h2>
+    <form [formGroup]="marcacaoForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="policialId"> Policial</label>
+        <mat-select formControlName="policialId" required>
+          <mat-option
+            *ngFor="let policial of policiais"
+            [value]="policial.policialId"
+          >
+            {{ policial.nome }}
+          </mat-option>
+        </mat-select>
+        <!-- <input type="text" id="policialId" formControlName="policialId" required /> -->
+      </div>
+      <div class="form-group">
+        <label for="escalaId">Escala</label>
+        <mat-select formControlName="escalaId" required>
+          <mat-option *ngFor="let escala of escalas" [value]="escala.escalaId">
+            {{
+              escala.dataHoraEntrada.toLocaleString() +
+                " - " +
+                escala.dataHoraSaida.toLocaleString()
+            }}
+          </mat-option>
+        </mat-select>
+        <!-- <input type="text" id="escalaId" formControlName="escalaId" required /> -->
+      </div>
+      <div class="form-group">
+        <label for="localId">Local</label>
+        <!-- <input type="text" id="localId" formControlName="localId" required /> -->
+        <mat-select formControlName="localId" required>
+          <mat-option *ngFor="let local of locais" [value]="local.localId">
+            {{ local.nome }}
+          </mat-option>
+        </mat-select>
+      </div>
+      <div class="form-actions">
+        <button mat-raised-button color="primary" type="submit">Salvar</button>
+        <button
+          mat-stroked-button
+          color="warn"
+          type="button"
+          (click)="resetForm()"
+        >
+          Cancelar
+        </button>
+      </div>
+    </form>
+    <div class="back-link">
+      <button mat-stroked-button color="primary" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon> Voltar ao Menu Anterior
+      </button>
+    </div>
+  </mat-card>
+</div>

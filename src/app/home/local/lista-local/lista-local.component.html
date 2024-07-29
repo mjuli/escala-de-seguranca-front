@@ -11,83 +11,90 @@
   <div class="list-card">
     <div class="header">
       <h2>Listagem de Locais</h2>
-      <button mat-stroked-button color="primary" (click)="goHome()">
-        Voltar
+      <button mat-fab style="float: right" (click)="onAdd()" class="add-button">
+        <mat-icon>add</mat-icon>
       </button>
     </div>
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nome</th>
-          <th>Descrição</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let local of locais">
-          <td>{{ local.localId }}</td>
-          <td>{{ local.nome }}</td>
-          <td>{{ local.descricao }}</td>
-          <td>
-            <button (click)="onEdit(local)">Editar</button>
-            <button (click)="onDelete(local.localId)">Excluir</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="pagination">
-      <button
-        [disabled]="currentPage === 1"
-        (click)="onPageChange(currentPage - 1)"
-      >
-        Anterior
-      </button>
-      <span>Página {{ currentPage }} de {{ totalPages }}</span>
-      <button
-        [disabled]="currentPage === totalPages"
-        (click)="onPageChange(currentPage + 1)"
-      >
-        Próxima
-      </button>
-    </div>
-  </div>
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      matSort
+      (matSortChange)="announceSortChange($event)"
+    >
+      <!-- Id Column -->
+      <ng-container matColumnDef="localId">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          sortActionDescription="Sort by number"
+        >
+          ID
+        </th>
+        <td mat-cell *matCellDef="let local">{{ local.localId }}</td>
+      </ng-container>
 
-  <div *ngIf="editMode" class="form-card">
-    <h2>{{ currentLocalId ? "Editar Local" : "Novo Local" }}</h2>
-    <form [formGroup]="localForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="nome">Nome:</label>
-        <input type="text" id="nome" formControlName="nome" required />
-      </div>
-      <div class="form-group">
-        <label for="descricao">Descrição:</label>
-        <textarea
-          id="descricao"
-          formControlName="descricao"
-          required
-        ></textarea>
-      </div>
-      <div class="form-actions">
-        <button mat-raised-button color="primary" type="submit">Salvar</button>
-        <button
-          mat-stroked-button
-          color="warn"
-          type="button"
-          (click)="resetForm()"
+      <!-- Nome Column -->
+      <ng-container matColumnDef="nome">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          sortActionDescription="Sort by name"
         >
-          Cancelar
-        </button>
-        <button
-          *ngIf="editMode"
-          mat-raised-button
-          color="warn"
-          type="button"
-          (click)="onDelete(currentLocalId!)"
+          Nome
+        </th>
+        <td mat-cell *matCellDef="let local">{{ local.nome }}</td>
+      </ng-container>
+
+      <!-- Descricao Column -->
+      <ng-container matColumnDef="descricao">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          sortActionDescription="Sort by number"
         >
-          Excluir
-        </button>
-      </div>
-    </form>
+          Descrição
+        </th>
+        <td mat-cell *matCellDef="let local">{{ local.descricao }}</td>
+      </ng-container>
+
+      <!-- Acoes Column -->
+      <ng-container matColumnDef="acao">
+        <th mat-header-cell *matHeaderCellDef class="acoes-header">Ação</th>
+        <td mat-cell *matCellDef="let local" class="acoes-cell">
+          <button
+            mat-icon-button
+            color="primary"
+            aria-label="Editar"
+            (click)="onEdit(local.localId)"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            color="warn"
+            aria-label="Remover"
+            (click)="onDelete(local.localId)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <mat-paginator
+      [length]="dataSource.data.length"
+      [pageSize]="10"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      [showFirstLastButtons]="true"
+      (page)="onPageChange($event)"
+      aria-label="Selecione página"
+    >
+    </mat-paginator>
   </div>
 </div>

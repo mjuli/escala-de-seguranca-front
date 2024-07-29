@@ -79,20 +79,45 @@ export class FormEscalaComponent implements OnInit {
       if (this.editMode && this.currentEscalaId !== null) {
         this.escalaService
           .updateEscala(this.currentEscalaId, escala)
-          .subscribe(() => {
-            this.router.navigate(['/home/escala']);
-            this.snackBar.open('Escala atualizada com sucesso!', 'Fechar', {
-              duration: 3000,
-            });
+          .subscribe({
+            next: () => {
+              this.snackBar.open('Escala atualizada com sucesso!', 'Fechar', {
+                duration: 3000,
+              });
+            },
+            error: (e) => {
+              console.error(e.error);
+              this.snackBar.open(
+                'Não foi possível atualizar escala. Motivo: ' +
+                  e.error.toLowerCase(),
+                'Fechar',
+                {
+                  duration: 3000,
+                }
+              );
+            },
           });
       } else {
-        this.escalaService.createEscala(escala).subscribe((res) => {
-          this.router.navigate(['/home/escala']);
-          this.snackBar.open('Escala criada com sucesso!', 'Fechar', {
-            duration: 3000,
-          });
+        this.escalaService.createEscala(escala).subscribe({
+          next: () => {
+            this.snackBar.open('Escala cadastrada com sucesso!', 'Fechar', {
+              duration: 3000,
+            });
+          },
+          error: (e) => {
+            console.error(e.error);
+            this.snackBar.open(
+              'Não foi possível cadastrar escala. Motivo: ' +
+                e.error.toLowerCase(),
+              'Fechar',
+              {
+                duration: 3000,
+              }
+            );
+          },
         });
       }
+      this.router.navigate(['/home/escala']);
     }
   }
 
@@ -112,12 +137,16 @@ export class FormEscalaComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/home']);
+    this.router.navigate(['/home/escala']);
   }
 
   resetForm() {
     this.escalaForm.reset();
     this.editMode = false;
     this.currentEscalaId = null;
+  }
+
+  navigateTo(path: string) {
+    this.router.navigate([path]);
   }
 }

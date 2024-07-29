@@ -4,6 +4,7 @@
   align-items: center;
   padding: 20px;
   background-color: #f5f5f5;
+  min-height: 100%;
 
   .list-card,
   .form-card {
@@ -174,6 +175,6 @@
   justify-content: center;
 }
 
-.add-button{
+.add-button {
   background-color: #4a76a1;
 }

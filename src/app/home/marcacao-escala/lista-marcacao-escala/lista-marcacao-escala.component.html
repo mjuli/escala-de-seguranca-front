@@ -1,37 +1,126 @@
-<div class="marcacoes-list">
-  <h2>Lista de Marcações de Escala</h2>
-  <ul>
-    @for(marcacao of marcacoes; track marcacao) {
-    <li (onKeyPress)="selectMarcacao(marcacao)">
-      {{ marcacao.marcacaoEscalaId }}
-    </li>
-    }
-  </ul>
-  <button (click)="selectMarcacao(marcacoes[0])">Nova Marcação</button>
+<div class="top-bar">
+  <a routerLink="/home" routerLinkActive="active">
+    <img src="assets/escala2.png" alt="Logo" class="logo" />
+  </a>
+  <h1>ESCALA DE SEGURANÇA</h1>
+  <button mat-icon-button class="logout-button" (click)="onLogout()">
+    <mat-icon>logout</mat-icon>
+  </button>
 </div>
+<div class="marcacao-container">
+  <div class="list-card">
+    <div class="header">
+      <h2>Listagem de Marcações de Escala</h2>
+      <button mat-fab style="float: right" (click)="onAdd()" class="add-button">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      matSort
+      (matSortChange)="announceSortChange($event)"
+    >
+      <!-- Id Column -->
+      <ng-container matColumnDef="marcacaoEscalaId">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          sortActionDescription="Sort by number"
+        >
+          ID
+        </th>
+        <td mat-cell *matCellDef="let marcacao">{{ marcacao.marcacaoEscalaId }}</td>
+      </ng-container>
 
-@if(selectedMarcacao){
-<div class="marcacao-form">
-  <h2>
-    {{
-      selectedMarcacao.marcacaoEscalaId ? "Editar Marcação" : "Nova Marcação"
-    }}
-  </h2>
-  <form (ngSubmit)="saveMarcacao(selectedMarcacao)">
-    <label for="nome">Nome:</label>
-    <input
-      type="text"
-      id="nome"
-      [(ngModel)]="selectedMarcacao.marcacaoEscalaId"
-      name="nome"
-      required
-    />
+      <!-- Policial Column -->
+      <ng-container matColumnDef="policialNome">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          sortActionDescription="Sort by name"
+        >
+          Policial
+        </th>
+        <td mat-cell *matCellDef="let marcacao">{{ marcacao.policialNome }}</td>
+      </ng-container>
 
-    <button type="submit">Salvar</button>
-    @if(selectedMarcacao.marcacaoEscalaId){
-    <button type="button" (click)="deleteMarcacao(1)">Excluir</button>
-    }
-    <button type="button" (click)="selectedMarcacao = null">Cancelar</button>
-  </form>
+      <!-- Data Entrada Column -->
+      <ng-container matColumnDef="dataHoraEntrada">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          sortActionDescription="Sort by number"
+        >
+          Início
+        </th>
+        <td mat-cell *matCellDef="let marcacao">{{ marcacao.dataHoraEntrada }}</td>
+      </ng-container>
+
+      <!-- Data Saida Column -->
+      <ng-container matColumnDef="dataHoraSaida">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          sortActionDescription="Sort by number"
+        >
+          Término
+        </th>
+        <td mat-cell *matCellDef="let marcacao">{{ marcacao.dataHoraSaida }}</td>
+      </ng-container>
+
+      <!-- Local Column -->
+      <ng-container matColumnDef="localNome">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          sortActionDescription="Sort by number"
+        >
+          Local
+        </th>
+        <td mat-cell *matCellDef="let marcacao">{{ marcacao.localNome }}</td>
+      </ng-container>
+
+      <!-- Acoes Column -->
+      <ng-container matColumnDef="acao">
+        <th mat-header-cell *matHeaderCellDef class="acoes-header">Ação</th>
+        <td mat-cell *matCellDef="let marcacao" class="acoes-cell">
+          <button
+            mat-icon-button
+            color="primary"
+            aria-label="Editar"
+            (click)="onEdit(marcacao.marcacaoEscalaId)"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            color="warn"
+            aria-label="Remover"
+            (click)="onDelete(marcacao.marcacaoEscalaId)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    <mat-paginator
+      [length]="dataSource.data.length"
+      [pageSize]="10"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      [showFirstLastButtons]="true"
+      (page)="onPageChange($event)"
+      aria-label="Selecione página"
+    >
+    </mat-paginator>
+  </div>
 </div>
-}

@@ -1,0 +1,94 @@
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  background-color: #f5f5f5;
+
+  mat-card {
+    width: 600px;
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid #ccc;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    text-align: center;
+    margin-top: 60px; // Adiciona espaço entre a barra superior e o formulário
+
+    h2 {
+      margin-bottom: 20px;
+    }
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #1976d2;
+      color: white;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+
+    button:hover {
+      background-color: #1565c0;
+    }
+  }
+
+  .back-link {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+
+    button {
+      display: flex;
+      align-items: center;
+
+      mat-icon {
+        margin-right: 5px;
+      }
+    }
+  }
+}
+.top-bar {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  background-color: #4a76a1;
+  color: white;
+
+  .logo {
+    height: 50px;
+    margin-right: 10px;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 1.5em;
+    flex-grow: 1;
+  }
+
+  .logout-button {
+    color: white;
+    // left: 980px;
+  }
+}

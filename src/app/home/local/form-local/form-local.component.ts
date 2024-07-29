@@ -1,12 +1,23 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import {
+  ActivatedRoute,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
 import { LocalService } from '../../../services/local.service';
 import { Local } from '../../../models/local';
 
@@ -65,22 +76,45 @@ export class FormLocalComponent implements OnInit {
     if (this.localForm.valid) {
       const local: Local = this.localForm.value;
       if (this.editMode && this.currentLocalId !== null) {
-        this.localService
-          .updateLocal(this.currentLocalId, local)
-          .subscribe(() => {
-            this.router.navigate(['/home/local']);
-            this.snackBar.open('Local Atualizado com sucesso!', 'Fechar', {
+        this.localService.updateLocal(this.currentLocalId, local).subscribe({
+          next: () => {
+            this.snackBar.open('Local atualizado com sucesso!', 'Fechar', {
               duration: 3000,
             });
-          });
+          },
+          error: (e) => {
+            console.error(e.error);
+            this.snackBar.open(
+              'Não foi possível atualizar local. Motivo: ' +
+                e.error.toLowerCase(),
+              'Fechar',
+              {
+                duration: 3000,
+              }
+            );
+          },
+        });
       } else {
-        this.localService.createLocal(local).subscribe(() => {
-          this.router.navigate(['/home/local']);
-          this.snackBar.open('Local criado com sucesso!', 'Fechar', {
-            duration: 3000,
-          });
+        this.localService.createLocal(local).subscribe({
+          next: () => {
+            this.snackBar.open('Local cadastrado com sucesso!', 'Fechar', {
+              duration: 3000,
+            });
+          },
+          error: (e) => {
+            console.error(e.error);
+            this.snackBar.open(
+              'Não foi possível cadastrar local. Motivo: ' +
+                e.error.toLowerCase(),
+              'Fechar',
+              {
+                duration: 3000,
+              }
+            );
+          },
         });
       }
+      this.router.navigate(['/home/local']);
     }
   }
 

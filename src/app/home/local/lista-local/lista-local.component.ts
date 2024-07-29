@@ -1,13 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, inject, ViewChild } from '@angular/core';
 import { Local } from '../../../models/local';
 import { LocalService } from '../../../services/local.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import {
+  ActivatedRoute,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
+import {
+  MatPaginator,
+  MatPaginatorModule,
+  PageEvent,
+} from '@angular/material/paginator';
+import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { Observable } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { DialogDeleteComponent } from '../../dialog/dialog-delete/dialog-delete.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-lista-local',
@@ -19,6 +37,9 @@ import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/rou
     MatButtonModule,
     MatCardModule,
     MatIconModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
     RouterOutlet,
     RouterLink,
     RouterLinkActive,
@@ -26,89 +47,104 @@ import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/rou
   templateUrl: './lista-local.component.html',
   styleUrls: ['./lista-local.component.scss'],
 })
-export class ListaLocalComponent implements OnInit {
-  locais: Local[] = [];
-  localForm: FormGroup;
-  editMode: boolean = false;
-  currentLocalId: number | null = null;
+export class ListaLocalComponent implements AfterViewInit {
+  locais$: Observable<Local[]>;
+  dataSource = new MatTableDataSource<Local>();
+  displayedColumns = ['localId', 'nome', 'descricao', 'acao'];
+  readonly dialog = inject(MatDialog);
 
-  currentPage = 1;
-  pageSize = 10;
-  totalItems = 0;
-  totalPages = 0;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(
     private localService: LocalService,
-    private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private _liveAnnouncer: LiveAnnouncer,
+    private activatedRoute: ActivatedRoute,
+    private snackBar: MatSnackBar
   ) {
-    this.localForm = this.fb.group({
-      nome: ['', Validators.required],
-      descricao: ['', Validators.required],
-    });
+    this.locais$ = this.loadLocais();
+    this.updateList();
   }
 
-  ngOnInit() {
-    this.loadLocais();
+  @ViewChild(MatSort) sort!: MatSort;
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+  }
+
+  updateList() {
+    this.locais$ = this.localService.getLocais();
+    this.locais$.subscribe((locais) => {
+      this.dataSource.data = locais;
+      this.dataSource.paginator = this.paginator;
+    });
   }
 
   loadLocais() {
-    this.localService
-      .getLocaisPaginados(this.currentPage, this.pageSize)
-      .subscribe((response) => {
-        this.locais = response.data;
-        this.totalItems = response.totalCount;
-        this.totalPages = response.totalPages;
-      });
+    return this.localService.getLocais();
   }
 
-  onSubmit() {
-    if (this.localForm.valid) {
-      const local: Local = this.localForm.value;
-      if (this.editMode && this.currentLocalId !== null) {
-        this.localService
-          .updateLocal(this.currentLocalId, local)
-          .subscribe(() => {
-            this.loadLocais();
-            this.resetForm();
-          });
-      } else {
-        this.localService.createLocal(local).subscribe(() => {
-          this.loadLocais();
-          this.resetForm();
-        });
-      }
-    }
-  }
-
-  onEdit(local: Local) {
-    this.editMode = true;
-    this.currentLocalId = local.localId;
-    this.localForm.patchValue(local);
-  }
-
-  onDelete(id: number) {
-    this.localService.deleteLocal(id).subscribe(() => {
-      this.loadLocais();
+  onEdit(id: Number) {
+    this.router.navigate([`${id}/edit`], {
+      relativeTo: this.activatedRoute,
     });
   }
 
-  resetForm() {
-    this.localForm.reset();
-    this.editMode = false;
-    this.currentLocalId = null;
+  onDelete(id: number) {
+    const dialogRef = this.dialog.open(DialogDeleteComponent);
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.localService.deleteLocal(id).subscribe({
+          next: () => {
+            this.updateList();
+            this.snackBar.open('Local excluído com sucesso', 'Fechar', {
+              duration: 3000,
+            });
+          },
+          error: (e) => {
+            console.error(e.error);
+            this.snackBar.open(
+              'Não foi possível excluir local. Motivo: ' +
+                e.error.toLowerCase(),
+              'Fechar',
+              {
+                duration: 3000,
+              }
+            );
+          },
+        });
+        this.updateList();
+      }
+    });
   }
 
-  onPageChange(page: number): void {
-    this.currentPage = page;
-    this.loadLocais();
+  onPageChange(event: PageEvent) {
+    this.dataSource.paginator = this.paginator;
+  }
+
+  navigateTo(path: string) {
+    this.router.navigate([path]);
   }
 
   goHome() {
     this.router.navigate(['/home']);
   }
+
   onLogout() {
     console.log('Logout clicked');
     this.router.navigate(['/login']);
+  }
+
+  announceSortChange(sortState: Sort) {
+    if (sortState.direction) {
+      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+    } else {
+      this._liveAnnouncer.announce('Sorting cleared');
+    }
+  }
+
+  onAdd() {
+    this.router.navigate(['new'], { relativeTo: this.activatedRoute });
   }
 }

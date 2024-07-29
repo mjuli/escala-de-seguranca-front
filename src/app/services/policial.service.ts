@@ -20,12 +20,16 @@ export class PolicialService {
   }
 
   createPolicial(policial: Policial): Observable<Policial> {
-    return this.http.post<Policial>(this.apiUrl, policial);
+    return this.http.post<Policial>(this.apiUrl, policial, {
+      responseType: 'text' as 'json',
+    });
   }
 
   updatePolicial(id: number, policial: Policial): Observable<Policial> {
     policial.policialId = id;
-    return this.http.put<Policial>(`${this.apiUrl}/${id}`, policial);
+    return this.http.put<Policial>(`${this.apiUrl}/${id}`, policial, {
+      responseType: 'text' as 'json',
+    });
   }
 
   deletePolicial(id: number): Observable<void> {

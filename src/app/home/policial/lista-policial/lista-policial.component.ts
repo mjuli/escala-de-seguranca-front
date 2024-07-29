@@ -25,6 +25,7 @@ import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogDeleteComponent } from '../../dialog/dialog-delete/dialog-delete.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-lista-policial',
@@ -58,7 +59,8 @@ export class ListaPolicialComponent implements AfterViewInit {
     private policialService: PolicialService,
     private router: Router,
     private _liveAnnouncer: LiveAnnouncer,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private snackBar: MatSnackBar
   ) {
     this.policiais$ = this.loadPoliciais();
     this.updateList();
@@ -93,8 +95,24 @@ export class ListaPolicialComponent implements AfterViewInit {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.policialService.deletePolicial(id).subscribe(() => {
-          this.updateList();
+        this.policialService.deletePolicial(id).subscribe({
+          next: () => {
+            this.updateList();
+            this.snackBar.open('Policial excluído com sucesso', 'Fechar', {
+              duration: 3000,
+            });
+          },
+          error: (e) => {
+            console.error(e.error);
+            this.snackBar.open(
+              'Não foi possível excluir o policial. Motivo: ' +
+                e.error.toLowerCase(),
+              'Fechar',
+              {
+                duration: 3000,
+              }
+            );
+          },
         });
         this.updateList();
       }

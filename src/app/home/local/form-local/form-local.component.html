@@ -22,26 +22,22 @@
           ></textarea>
         </div>
         <div class="form-actions">
-          <button mat-raised-button color="primary" type="submit">
-            {{ editMode ? "Editar Local" : "Cadastrar Local" }}
-          </button>
-        </div>
-      </form>
+        <button mat-raised-button color="primary" type="submit">Salvar</button>
+        <button
+          mat-stroked-button
+          color="warn"
+          type="button"
+          (click)="resetForm()"
+        >
+          Cancelar
+        </button>
+      </div>
+    </form>
+    <div class="back-link">
+      <button mat-stroked-button color="primary" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon> Voltar ao Menu Anterior
+      </button>
+    </div>
     </mat-card-content>
   </mat-card>
-  <div class="outside-actions">
-    <button mat-raised-button (click)="activateEditMode()">Editar Local</button>
-    <button mat-raised-button (click)="goBack()">
-      <mat-icon>arrow_back</mat-icon>Voltar
-    </button>
-    <button
-      mat-raised-button
-      color="warn"
-      *ngIf="editMode"
-      (click)="onDelete()"
-    >
-      <mat-icon>delete</mat-icon>
-      Deletar Local
-    </button>
-  </div>
 </div>
