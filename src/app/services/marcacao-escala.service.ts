@@ -1,7 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MarcacaoEscala, MarcacaoEscalaOutput } from '../models/marcacao-escala';
+import {
+  MarcacaoEscala,
+  MarcacaoEscalaOutput,
+} from '../models/marcacao-escala';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +25,9 @@ export class MarcacaoEscalaService {
   createMarcacaoEscala(
     marcacaoEscala: MarcacaoEscala
   ): Observable<MarcacaoEscala> {
-    return this.http.post<MarcacaoEscala>(this.apiUrl, marcacaoEscala);
+    return this.http.post<MarcacaoEscala>(this.apiUrl, marcacaoEscala, {
+      responseType: 'text' as 'json',
+    });
   }
 
   updateMarcacaoEscala(
@@ -32,7 +37,10 @@ export class MarcacaoEscalaService {
     marcacaoEscala.marcacaoEscalaId = id;
     return this.http.put<MarcacaoEscala>(
       `${this.apiUrl}/${id}`,
-      marcacaoEscala
+      marcacaoEscala,
+      {
+        responseType: 'text' as 'json',
+      }
     );
   }
 

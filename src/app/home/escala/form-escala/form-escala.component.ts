@@ -68,14 +68,21 @@ export class FormEscalaComponent implements OnInit {
 
   loadEscala(id: number) {
     this.escalaService.getEscala(id).subscribe((escala) => {
+      escala.dataHoraEntrada = new Date(escala.dataHoraEntrada)
+        .toISOString()
+        .slice(0, -1);
+      escala.dataHoraSaida = new Date(escala.dataHoraSaida)
+        .toISOString()
+        .slice(0, -1);
       this.escalaForm.patchValue(escala);
     });
   }
 
   onSubmit() {
-    console.log(this.escalaForm.valid);
     if (this.escalaForm.valid) {
       const escala: Escala = this.escalaForm.value;
+      escala.dataHoraEntrada = new Date(escala.dataHoraEntrada).toISOString();
+      escala.dataHoraSaida = new Date(escala.dataHoraSaida).toISOString();
       if (this.editMode && this.currentEscalaId !== null) {
         this.escalaService
           .updateEscala(this.currentEscalaId, escala)
@@ -84,6 +91,7 @@ export class FormEscalaComponent implements OnInit {
               this.snackBar.open('Escala atualizada com sucesso!', 'Fechar', {
                 duration: 3000,
               });
+              this.router.navigate(['/home/escala']);
             },
             error: (e) => {
               console.error(e.error);
@@ -95,6 +103,7 @@ export class FormEscalaComponent implements OnInit {
                   duration: 3000,
                 }
               );
+              this.router.navigate(['/home/escala']);
             },
           });
       } else {
@@ -103,6 +112,7 @@ export class FormEscalaComponent implements OnInit {
             this.snackBar.open('Escala cadastrada com sucesso!', 'Fechar', {
               duration: 3000,
             });
+            this.router.navigate(['/home/escala']);
           },
           error: (e) => {
             console.error(e.error);
@@ -117,7 +127,6 @@ export class FormEscalaComponent implements OnInit {
           },
         });
       }
-      this.router.navigate(['/home/escala']);
     }
   }
 

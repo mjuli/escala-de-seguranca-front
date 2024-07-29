@@ -115,6 +115,7 @@ export class FormMarcacaoEscalaComponent implements OnInit {
               this.snackBar.open('Marcação atualizado com sucesso!', 'Fechar', {
                 duration: 3000,
               });
+              this.router.navigate(['/home/marcacao-escala']);
             },
             error: (e) => {
               console.error(e.error);
@@ -126,6 +127,7 @@ export class FormMarcacaoEscalaComponent implements OnInit {
                   duration: 3000,
                 }
               );
+              this.router.navigate(['/home/marcacao-escala']);
             },
           });
       } else {
@@ -134,6 +136,7 @@ export class FormMarcacaoEscalaComponent implements OnInit {
             this.snackBar.open('Marcação cadastrada com sucesso!', 'Fechar', {
               duration: 3000,
             });
+            this.router.navigate(['/home/marcacao-escala']);
           },
           error: (e) => {
             console.error(e.error);
@@ -145,6 +148,7 @@ export class FormMarcacaoEscalaComponent implements OnInit {
                 duration: 3000,
               }
             );
+            this.router.navigate(['/home/marcacao-escala']);
           },
         });
       }

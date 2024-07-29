@@ -1,5 +1,5 @@
 export interface Escala {
   escalaId: number;
-  dataHoraEntrada: Date;
-  dataHoraSaida: Date;
+  dataHoraEntrada: string | Date;
+  dataHoraSaida: string | Date;
 }

@@ -85,6 +85,7 @@ export class FormPolicialComponent implements OnInit {
               this.snackBar.open('Policial atualizado com sucesso!', 'Fechar', {
                 duration: 3000,
               });
+              this.router.navigate(['/home/policial']);
             },
             error: (e) => {
               console.error(e.error);
@@ -96,6 +97,7 @@ export class FormPolicialComponent implements OnInit {
                   duration: 3000,
                 }
               );
+              this.router.navigate(['/home/policial']);
             },
           });
       } else {
@@ -104,6 +106,7 @@ export class FormPolicialComponent implements OnInit {
             this.snackBar.open('Policial cadastrado com sucesso!', 'Fechar', {
               duration: 3000,
             });
+            this.router.navigate(['/home/policial']);
           },
           error: (e) => {
             console.error(e.error);
@@ -115,10 +118,10 @@ export class FormPolicialComponent implements OnInit {
                 duration: 3000,
               }
             );
+            this.router.navigate(['/home/policial']);
           },
         });
       }
-      this.router.navigate(['/home/policial']);
     }
   }
 

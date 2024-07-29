@@ -81,6 +81,7 @@ export class FormLocalComponent implements OnInit {
             this.snackBar.open('Local atualizado com sucesso!', 'Fechar', {
               duration: 3000,
             });
+            this.router.navigate(['/home/local']);
           },
           error: (e) => {
             console.error(e.error);
@@ -92,6 +93,7 @@ export class FormLocalComponent implements OnInit {
                 duration: 3000,
               }
             );
+            this.router.navigate(['/home/local']);
           },
         });
       } else {
@@ -100,6 +102,7 @@ export class FormLocalComponent implements OnInit {
             this.snackBar.open('Local cadastrado com sucesso!', 'Fechar', {
               duration: 3000,
             });
+            this.router.navigate(['/home/local']);
           },
           error: (e) => {
             console.error(e.error);
@@ -111,10 +114,10 @@ export class FormLocalComponent implements OnInit {
                 duration: 3000,
               }
             );
+            this.router.navigate(['/home/local']);
           },
         });
       }
-      this.router.navigate(['/home/local']);
     }
   }
 

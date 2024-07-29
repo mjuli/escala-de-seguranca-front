@@ -27,7 +27,9 @@ export class EscalaService {
 
   updateEscala(id: number, escala: Escala): Observable<Escala> {
     escala.escalaId = id;
-    return this.http.put<Escala>(`${this.apiUrl}/${id}`, escala);
+    return this.http.put<Escala>(`${this.apiUrl}/${id}`, escala, {
+      responseType: 'text' as 'json',
+    });
   }
 
   deleteEscala(id: number): Observable<void> {
